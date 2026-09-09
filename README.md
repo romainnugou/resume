@@ -14,7 +14,11 @@ Edit `resume.md` in the project root with your own name, title, links, and secti
 - YAML frontmatter: `name`, `title`, optionally `lang` (defaults to `en`), `photo` (markdown image syntax, e.g. `"![Alt](./photo.jpg)"`), `links` (list of markdown links, e.g. `"[GitHub](https://github.com/you)"`).
 - Any text before the first `## Heading` is your summary paragraph.
 - Each `## Heading` becomes a page section (nav, anchor, etc).
-- Within a section, `### Title | Org | Dates` starts a timeline entry (used for Experience, Education, etc). A section with no `###` entries just renders as plain markdown — use this for Languages, Skills, and similar lists.
+- Within a section, `### Title | Org | Dates` starts a timeline entry (used for Experience, Education, etc). Any text between the section heading and the first `###` entry renders as an intro paragraph above the timeline. A section with no `###` entries just renders as plain markdown — use this for Languages, Skills, and similar lists.
+
+## Dark mode
+
+Follows your system preference by default. A toggle button in the header lets you override it, saved for next visit. Automatically switches back to light mode while printing, regardless of the current setting.
 
 ## Multiple languages
 
@@ -31,3 +35,9 @@ pnpm build     # outputs to dist/
 ```
 
 Deploy the `dist/` folder to Cloudflare Pages (build command: `pnpm build`, output directory: `dist`).
+
+## Tests
+
+```bash
+pnpm test      # runs the parser/discovery unit tests
+```
