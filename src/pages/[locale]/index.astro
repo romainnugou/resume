@@ -1,0 +1,30 @@
+---
+import fs from 'node:fs';
+import ResumePage from '../../components/ResumePage.astro';
+import { discoverResumeFiles } from '../../lib/discoverResumeFiles';
+import { parseResumeMarkdown } from '../../lib/parseResume';
+
+export function getStaticPaths() {
+  const files = discoverResumeFiles(process.cwd());
+  return files
+    .filter((f) => !f.isDefault)
+    .map((f) => ({
+      params: { locale: f.locale },
+      props: { filePath: f.filePath, locale: f.locale },
+    }));
+}
+
+const { filePath, locale } = Astro.props;
+const files = discoverResumeFiles(process.cwd());
+const defaultFile = files.find((f) => f.isDefault)!;
+const otherFiles = files.filter((f) => !f.isDefault);
+const raw = fs.readFileSync(filePath, 'utf-8');
+const resume = parseResumeMarkdown(raw);
+---
+
+<ResumePage
+  resume={resume}
+  lang={locale}
+  defaultLocale={defaultFile.locale}
+  otherLocales={otherFiles.map((f) => f.locale)}
+/>

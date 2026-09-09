@@ -1,0 +1,26 @@
+---
+export interface Props {
+  defaultLocale: string;
+  otherLocales: string[];
+  currentLocale: string;
+}
+
+const { defaultLocale, otherLocales, currentLocale } = Astro.props;
+const allLocales = [defaultLocale, ...otherLocales];
+---
+
+{
+  allLocales.length > 1 && (
+    <nav class="print:hidden flex gap-3 text-sm">
+      {allLocales.map((locale) => (
+        <a
+          href={locale === defaultLocale ? '/' : `/${locale}/`}
+          class={locale === currentLocale ? 'font-semibold underline' : 'hover:underline'}
+          aria-current={locale === currentLocale ? 'page' : undefined}
+        >
+          {locale.toUpperCase()}
+        </a>
+      ))}
+    </nav>
+  )
+}
