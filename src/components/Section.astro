@@ -1,0 +1,16 @@
+---
+import type { ProseSection } from '../lib/parseResume';
+
+export interface Props {
+  section: ProseSection;
+}
+
+const { section } = Astro.props;
+---
+
+<section id={section.slug} class="mb-10 scroll-mt-20">
+  <h2 class="text-xl font-semibold mb-3 border-b border-gray-200 dark:border-gray-800 pb-1">
+    {section.heading}
+  </h2>
+  <div class="space-y-2 text-gray-800 dark:text-gray-200" set:html={section.html} />
+</section>

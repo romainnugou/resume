@@ -1,0 +1,55 @@
+---
+import type { Link, Photo } from '../lib/parseResume';
+
+export interface Props {
+  name: string;
+  title: string;
+  photo: Photo | null;
+  links: Link[];
+  summaryHtml: string;
+}
+
+const { name, title, photo, links, summaryHtml } = Astro.props;
+---
+
+<header class="mb-10 flex flex-col sm:flex-row gap-6 sm:items-center">
+  {
+    photo && (
+      <img
+        src={photo.url}
+        alt={photo.alt}
+        class="w-24 h-24 rounded-full object-cover shrink-0"
+      />
+    )
+  }
+  <div>
+    <h1 class="text-3xl font-bold tracking-tight">{name}</h1>
+    <p class="text-lg text-gray-600 dark:text-gray-400">{title}</p>
+    {
+      links.length > 0 && (
+        <ul class="flex flex-wrap gap-4 mt-2 text-sm">
+          {links.map((link) => (
+            <li>
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="underline hover:no-underline"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+    {
+      summaryHtml && (
+        <div
+          class="mt-4 space-y-2 text-gray-800 dark:text-gray-200"
+          set:html={summaryHtml}
+        />
+      )
+    }
+  </div>
+</header>
