@@ -1,8 +1,13 @@
 ---
-import '../styles/global.css';
+import fs from 'node:fs';
+import ResumePage from '../components/ResumePage.astro';
+import { discoverResumeFiles } from '../lib/discoverResumeFiles';
+import { parseResumeMarkdown } from '../lib/parseResume';
+
+const files = discoverResumeFiles(process.cwd());
+const defaultFile = files.find((f) => f.isDefault)!;
+const raw = fs.readFileSync(defaultFile.filePath, 'utf-8');
+const resume = parseResumeMarkdown(raw);
 ---
-<html lang="en">
-  <body>
-    <p>Placeholder — replaced in Task 11.</p>
-  </body>
-</html>
+
+<ResumePage resume={resume} lang={defaultFile.locale} />
