@@ -68,8 +68,12 @@ export function splitOnHeadingLevel(
   return blocks;
 }
 
-export function splitSummaryAndBody(body: string): { summaryMd: string; rest: string } {
-  const match = body.match(/^## /m);
+function splitBeforeHeadingLevel(
+  body: string,
+  level: number
+): { summaryMd: string; rest: string } {
+  const marker = '#'.repeat(level) + ' ';
+  const match = body.match(new RegExp(`^${marker}`, 'm'));
   if (!match || match.index === undefined) {
     return { summaryMd: body.trim(), rest: '' };
   }
@@ -77,6 +81,10 @@ export function splitSummaryAndBody(body: string): { summaryMd: string; rest: st
     summaryMd: body.slice(0, match.index).trim(),
     rest: body.slice(match.index).trim(),
   };
+}
+
+export function splitSummaryAndBody(body: string): { summaryMd: string; rest: string } {
+  return splitBeforeHeadingLevel(body, 2);
 }
 
 export interface TimelineEntry {
@@ -97,6 +105,7 @@ export interface TimelineSectionData {
   type: 'timeline';
   heading: string;
   slug: string;
+  introHtml?: string;
   entries: TimelineEntry[];
 }
 
@@ -133,6 +142,9 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
       return { type: 'prose', heading, slug, html: marked.parse(body) as string };
     }
 
+    const { summaryMd: introMd } = splitBeforeHeadingLevel(body, 3);
+    const introHtml = introMd ? (marked.parse(introMd) as string) : undefined;
+
     const entries: TimelineEntry[] = entryBlocks.map(({ title: entryTitle, body: entryBody }) => {
       const parts = entryTitle.split('|').map((part) => part.trim());
       return {
@@ -143,7 +155,7 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
       };
     });
 
-    return { type: 'timeline', heading, slug, entries };
+    return { type: 'timeline', heading, slug, introHtml, entries };
   });
 
   return { name, title, lang, photo, links, summaryHtml, sections };

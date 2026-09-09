@@ -27,6 +27,12 @@ const pageTitle = `${name} — ${title}`;
         if (stored === 'dark' || (!stored && prefersDark)) {
           document.documentElement.classList.add('dark');
         }
+        window.addEventListener('beforeprint', () => document.documentElement.classList.remove('dark'));
+        window.addEventListener('afterprint', () => {
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          }
+        });
       })();
     </script>
   </head>

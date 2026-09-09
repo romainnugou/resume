@@ -176,6 +176,46 @@ Built the core API.
     }
   });
 
+  it('captures prelude text before the first ### entry as introHtml', () => {
+    const withIntro = `---
+name: Jane Doe
+title: Software Engineer
+---
+
+## Experience
+
+I have worked at several places.
+
+### Eng | Acme | 2020
+Did things.
+`;
+    const experience = parseResumeMarkdown(withIntro).sections.find(
+      (s) => s.heading === 'Experience'
+    );
+    expect(experience?.type).toBe('timeline');
+    if (experience?.type === 'timeline') {
+      expect(experience.introHtml).toContain('I have worked at several places');
+      expect(experience.entries).toEqual([
+        {
+          title: 'Eng',
+          org: 'Acme',
+          dates: '2020',
+          html: expect.stringContaining('Did things'),
+        },
+      ]);
+    }
+  });
+
+  it('omits introHtml when there is no prelude text before entries', () => {
+    const experience = parseResumeMarkdown(sample).sections.find(
+      (s) => s.heading === 'Experience'
+    );
+    expect(experience?.type).toBe('timeline');
+    if (experience?.type === 'timeline') {
+      expect(experience.introHtml).toBeUndefined();
+    }
+  });
+
   it('slugifies section headings', () => {
     const experience = parseResumeMarkdown(sample).sections.find(
       (s) => s.heading === 'Experience'
