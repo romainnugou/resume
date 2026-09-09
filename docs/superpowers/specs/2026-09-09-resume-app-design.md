@@ -42,9 +42,9 @@ YAML frontmatter for the header, then plain markdown sections:
 ---
 name: Romain Nugou
 title: Software Engineer
-email: hello@romain.ng
 links:
-  - { label: GitHub, url: https://github.com/... }
+  - "[GitHub](https://github.com/romainnugou)"
+  - "[Email](mailto:hello@romain.ng)"
 ---
 
 ## Experience
@@ -66,11 +66,13 @@ Did other things.
 ```
 
 Rules:
-- Frontmatter (`name`, `title`, `email`, `links`, optionally `summary`,
-  `photo`, etc.) maps to the header component. Any field not explicitly
-  known is passed through where reasonably possible, but the header
-  component only renders fields it understands — this is not a fully
-  generic frontmatter renderer.
+- Frontmatter (`name`, `title`, `links`, optionally `summary`, `photo`,
+  etc.) maps to the header component. `links` is a list of markdown link
+  strings (`"[Label](url)"`), parsed for label + url — native markdown
+  syntax rather than a bespoke YAML object shape. Any field not
+  explicitly known is passed through where reasonably possible, but the
+  header component only renders fields it understands — this is not a
+  fully generic frontmatter renderer.
 - Each `## Heading` becomes a page section, in file order. The heading text
   becomes both the display title and the nav anchor slug.
 - Within a section, each `### Title | Org | Dates` line starts a **timeline
@@ -87,7 +89,10 @@ Rules:
 Single Astro page (`src/pages/index.astro`). At build time:
 
 1. `lib/parseResume.ts` reads `resume.md` from the project root.
-2. `gray-matter` extracts frontmatter → header data.
+2. `gray-matter` extracts frontmatter → header data; each `links` entry
+   (a markdown link string) is parsed into `{ label, url }` with a small
+   regex (`marked`'s inline lexer is overkill for a single link per
+   string).
 3. The remaining markdown body is split into sections on `^## `.
 4. Each section's body is further split into timeline entries on `^### `
    (if any exist); each entry's remaining text is split on `|` for
@@ -140,6 +145,7 @@ a clear error (dev-time only; no user-facing runtime path hits this).
 The only non-trivial logic in this app is the markdown parser
 (`lib/parseResume.ts`). It gets one small test file covering:
 - frontmatter extraction
+- link string parsing (`"[Label](url)"` → `{ label, url }`)
 - section splitting (`## `)
 - timeline entry detection and splitting (`### Title | Org | Dates`)
 - a section with no entries falling back to prose
