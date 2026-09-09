@@ -1,0 +1,21 @@
+---
+import type { Section } from '../lib/parseResume';
+
+export interface Props {
+  sections: Section[];
+}
+
+const { sections } = Astro.props;
+---
+
+{
+  sections.length > 0 && (
+    <nav class="print:hidden mb-8 flex flex-wrap gap-4 text-sm border-b border-gray-200 dark:border-gray-800 pb-4">
+      {sections.map((section) => (
+        <a href={`#${section.slug}`} class="hover:underline">
+          {section.heading}
+        </a>
+      ))}
+    </nav>
+  )
+}
