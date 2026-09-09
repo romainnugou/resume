@@ -42,10 +42,13 @@ YAML frontmatter for the header, then plain markdown sections:
 ---
 name: Romain Nugou
 title: Software Engineer
+photo: "![Romain Nugou](./photo.jpg)"
 links:
   - "[GitHub](https://github.com/romainnugou)"
   - "[Email](mailto:hello@romain.ng)"
 ---
+
+Building reliable systems for **10+ years**, focused on developer tools.
 
 ## Experience
 
@@ -66,13 +69,17 @@ Did other things.
 ```
 
 Rules:
-- Frontmatter (`name`, `title`, `links`, optionally `summary`, `photo`,
-  etc.) maps to the header component. `links` is a list of markdown link
-  strings (`"[Label](url)"`), parsed for label + url — native markdown
-  syntax rather than a bespoke YAML object shape. Any field not
+- Frontmatter (`name`, `title`, `links`, optionally `photo`, etc.) maps to
+  the header component. `links` is a list of markdown link strings
+  (`"[Label](url)"`), parsed for label + url; `photo` is a markdown image
+  string (`"![alt](url)"`), parsed for alt text + url — both use native
+  markdown syntax rather than a bespoke YAML object shape. Any field not
   explicitly known is passed through where reasonably possible, but the
   header component only renders fields it understands — this is not a
   fully generic frontmatter renderer.
+- Any body content before the first `## Heading` is the **summary** — a
+  plain markdown paragraph (or few), rendered like any other section
+  content, no frontmatter field needed.
 - Each `## Heading` becomes a page section, in file order. The heading text
   becomes both the display title and the nav anchor slug.
 - Within a section, each `### Title | Org | Dates` line starts a **timeline
@@ -90,15 +97,18 @@ Single Astro page (`src/pages/index.astro`). At build time:
 
 1. `lib/parseResume.ts` reads `resume.md` from the project root.
 2. `gray-matter` extracts frontmatter → header data; each `links` entry
-   (a markdown link string) is parsed into `{ label, url }` with a small
-   regex (`marked`'s inline lexer is overkill for a single link per
+   (a markdown link string) and the `photo` field (a markdown image
+   string) are parsed into `{ label, url }` / `{ alt, url }` with a small
+   regex (`marked`'s inline lexer is overkill for a single link/image per
    string).
-3. The remaining markdown body is split into sections on `^## `.
+3. Any body content before the first `## ` heading is captured as the
+   summary and rendered via `marked`. The rest of the body is split into
+   sections on `^## `.
 4. Each section's body is further split into timeline entries on `^### `
    (if any exist); each entry's remaining text is split on `|` for
    title/org/dates, and its trailing prose is rendered via `marked`.
-5. The result is a single typed `ResumeData` object (frontmatter + ordered
-   sections, each either `{ type: 'timeline', entries }` or
+5. The result is a single typed `ResumeData` object (frontmatter + summary
+   HTML + ordered sections, each either `{ type: 'timeline', entries }` or
    `{ type: 'prose', html }`), passed into Astro components.
 
 No runtime parsing — everything above happens at build time. If
@@ -108,9 +118,10 @@ a clear error (dev-time only; no user-facing runtime path hits this).
 ## Components
 
 - `src/pages/index.astro` — page shell; sets `<title>`, meta description,
-  and Open Graph tags from frontmatter (name, title, summary if present)
-- `src/components/Header.astro` — name, title, contact info, external
-  links (icons, `target="_blank" rel="noopener"`)
+  and Open Graph tags from frontmatter/summary (name, title, summary text
+  stripped of markdown if present)
+- `src/components/Header.astro` — name, title, photo, external links
+  (icons, `target="_blank" rel="noopener"`), and summary paragraph
 - `src/components/Nav.astro` — in-page nav generated from the section
   list, anchor links to `#<section-slug>`, `class="print:hidden"`
 - `src/components/Section.astro` — generic section wrapper (heading +
@@ -146,6 +157,8 @@ The only non-trivial logic in this app is the markdown parser
 (`lib/parseResume.ts`). It gets one small test file covering:
 - frontmatter extraction
 - link string parsing (`"[Label](url)"` → `{ label, url }`)
+- photo string parsing (`"![alt](url)"` → `{ alt, url }`)
+- summary extraction (body content before the first `## `)
 - section splitting (`## `)
 - timeline entry detection and splitting (`### Title | Org | Dates`)
 - a section with no entries falling back to prose
