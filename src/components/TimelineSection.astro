@@ -1,0 +1,19 @@
+---
+import TimelineEntry from './TimelineEntry.astro';
+import type { TimelineSectionData } from '../lib/parseResume';
+
+export interface Props {
+  section: TimelineSectionData;
+}
+
+const { section } = Astro.props;
+---
+
+<section id={section.slug} class="mb-10 scroll-mt-20">
+  <h2 class="text-xl font-semibold mb-4 border-b border-gray-200 dark:border-gray-800 pb-1">
+    {section.heading}
+  </h2>
+  <div class="relative border-l-2 border-gray-300 dark:border-gray-700 pl-6 space-y-8">
+    {section.entries.map((entry) => <TimelineEntry entry={entry} />)}
+  </div>
+</section>
