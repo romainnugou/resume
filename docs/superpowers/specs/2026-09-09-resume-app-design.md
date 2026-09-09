@@ -2,9 +2,10 @@
 
 ## Purpose
 
-A static, developer-friendly resume site generated from a single hand-edited
-`resume.md` file. No backend, no CMS, no editing UI. Clone the repo, edit the
-markdown, deploy. v0 targets one person's resume (the author's).
+A static, developer-friendly resume site generated from one or more
+hand-edited markdown files (`resume.md`, optionally per-language variants).
+No backend, no CMS, no editing UI. Clone the repo, edit the markdown,
+deploy. v0 targets one person's resume (the author's).
 
 ## Goals
 
@@ -18,11 +19,14 @@ markdown, deploy. v0 targets one person's resume (the author's).
 - External links (contact, socials) open safely in new tabs
 - Metadata + Open Graph tags for link previews
 - Static generation, deployed to Cloudflare Pages, no server/backend
+- Optional multilingual support: additional `resume.<locale>.md` files,
+  zero config/overhead when only one resume file exists
 
 ## Non-goals (v0)
 
 - No editing UI / CMS — `resume.md` is edited by hand in a text editor
-- No multi-resume / multi-user support
+- No multi-user support (multiple *languages* of one person's resume are
+  supported — see Internationalization)
 - No build-time PDF generation — PDF export is browser print-to-PDF only
 - No backend, database, or API
 
@@ -91,29 +95,62 @@ Rules:
 - The `Title | Org | Dates` pattern is split on `|`; missing pieces (e.g. no
   dates) are treated as empty strings, not errors — the entry still renders.
 
+## Internationalization
+
+- **File convention**: `resume.md` (no suffix) is always the default
+  language. Additional languages are separate, fully independent files:
+  `resume.<locale>.md` (e.g. `resume.fr.md`). Each file has its own
+  frontmatter, summary, and sections — no per-line/per-field language
+  markers, no shared structure enforced between them.
+- **Single-language case (default)**: only `resume.md` exists → the site
+  behaves exactly as described elsewhere in this doc. No routing changes,
+  no language switcher rendered, no i18n code path engaged. `lang` in
+  frontmatter is optional here and defaults to `en` (used only for the
+  `<html lang>` attribute; nothing else depends on it being correct).
+- **Multi-language case**: if any `resume.<locale>.md` files exist
+  alongside `resume.md`, the build enables Astro's built-in i18n routing.
+  `resume.md` serves at `/`, each additional file at `/<locale>/` (e.g.
+  `/fr/` for `resume.fr.md`). A small language switcher appears in the
+  header, only rendered when more than one resume file exists.
+- **`lang` field becomes required** on `resume.md`'s frontmatter as soon
+  as any additional locale file exists (needed for a correct `<html
+  lang>`, hreflang tags, and switcher labels) — the build fails with a
+  clear error naming the missing field if it's absent in that case. For
+  additional files, the locale code comes from the filename suffix
+  (`resume.fr.md` → `fr`), not a frontmatter field.
+- Each language's content is parsed independently through the same
+  pipeline described below — there is no shared/merged parsing logic
+  between languages.
+
 ## Architecture
 
-Single Astro page (`src/pages/index.astro`). At build time:
+Single Astro page template (`src/pages/index.astro`, plus Astro's i18n
+routing generating `/<locale>/` variants when needed). At build time:
 
-1. `lib/parseResume.ts` reads `resume.md` from the project root.
-2. `gray-matter` extracts frontmatter → header data; each `links` entry
-   (a markdown link string) and the `photo` field (a markdown image
-   string) are parsed into `{ label, url }` / `{ alt, url }` with a small
-   regex (`marked`'s inline lexer is overkill for a single link/image per
-   string).
+1. `lib/parseResume.ts` discovers resume files in the project root:
+   `resume.md` (default) and any `resume.<locale>.md` files.
+2. For each file: `gray-matter` extracts frontmatter → header data; each
+   `links` entry (a markdown link string) and the `photo` field (a
+   markdown image string) are parsed into `{ label, url }` / `{ alt, url }`
+   with a small regex (`marked`'s inline lexer is overkill for a single
+   link/image per string).
 3. Any body content before the first `## ` heading is captured as the
    summary and rendered via `marked`. The rest of the body is split into
    sections on `^## `.
 4. Each section's body is further split into timeline entries on `^### `
    (if any exist); each entry's remaining text is split on `|` for
    title/org/dates, and its trailing prose is rendered via `marked`.
-5. The result is a single typed `ResumeData` object (frontmatter + summary
-   HTML + ordered sections, each either `{ type: 'timeline', entries }` or
-   `{ type: 'prose', html }`), passed into Astro components.
+5. The result is a typed `ResumeData` object per file (frontmatter +
+   summary HTML + ordered sections, each either `{ type: 'timeline',
+   entries }` or `{ type: 'prose', html }`, plus its resolved `lang`),
+   passed into Astro components. When more than one file was discovered,
+   the list of available locales is passed to the language switcher.
 
 No runtime parsing — everything above happens at build time. If
-`resume.md` is missing or frontmatter fails to parse, the build fails with
-a clear error (dev-time only; no user-facing runtime path hits this).
+`resume.md` is missing, frontmatter fails to parse, or `lang` is missing
+from `resume.md` while additional locale files exist, the build fails
+with a clear error (dev-time only; no user-facing runtime path hits
+this).
 
 ## Components
 
@@ -132,6 +169,9 @@ a clear error (dev-time only; no user-facing runtime path hits this).
 - `src/components/ThemeToggle.astro` — toggle button + localStorage
   persistence; a small inline `<script>` in `<head>` sets the theme class
   before first paint to avoid flash-of-wrong-theme
+- `src/components/LanguageSwitcher.astro` — links to each locale's root
+  path (e.g. `/`, `/fr/`); only rendered when more than one resume file
+  was discovered at build time; `class="print:hidden"`
 
 ## Styling
 
@@ -146,6 +186,8 @@ a clear error (dev-time only; no user-facing runtime path hits this).
 
 - Missing/unreadable `resume.md`, or unparseable frontmatter: build fails
   with a clear message naming the file. No silent fallback.
+- `resume.md` missing `lang` while a `resume.<locale>.md` file exists:
+  build fails with a clear message naming the missing field.
 - Section with zero timeline entries: renders as prose, not an empty
   timeline.
 - Timeline entry with a malformed or partial `Title | Org | Dates` line:
@@ -163,6 +205,10 @@ The only non-trivial logic in this app is the markdown parser
 - timeline entry detection and splitting (`### Title | Org | Dates`)
 - a section with no entries falling back to prose
 - an entry with a missing piece (e.g. no dates) not throwing
+- resume file discovery: only `resume.md` present → no locales list; with
+  `resume.fr.md` also present → both discovered and locale-tagged correctly
+- missing `lang` on `resume.md` throwing only when another locale file
+  exists, not when it's the only file
 
 No other test coverage is planned for v0 — components are presentational
 with no branching logic worth testing in isolation.
@@ -177,6 +223,8 @@ with no branching logic worth testing in isolation.
 
 ## Open questions / future (explicitly out of scope for v0)
 
-- Multiple resumes / variants from one repo
+- Multiple resume *variants* for the same language (e.g. a shorter
+  version tailored to a specific job application) — not the same as
+  multilingual support, which is in scope
 - Build-time PDF artifact generation
 - CMS or in-browser editing
