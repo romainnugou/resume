@@ -24,6 +24,11 @@ export function parseLinkString(raw: string): Link {
   return { label: match[1], url: match[2] };
 }
 
+function tryParseLink(raw: string): Link | null {
+  const match = raw.trim().match(LINK_PATTERN);
+  return match ? { label: match[1], url: match[2] } : null;
+}
+
 export function parsePhotoString(raw: string): Photo {
   const match = raw.trim().match(PHOTO_PATTERN);
   if (!match) {
@@ -90,6 +95,7 @@ export function splitSummaryAndBody(body: string): { summaryMd: string; rest: st
 export interface TimelineEntry {
   title: string;
   org: string;
+  orgUrl?: string;
   dates: string;
   html: string;
 }
@@ -116,6 +122,9 @@ export interface ParsedResume {
   title: string;
   lang?: string;
   photo: Photo | null;
+  email?: string;
+  phone?: string;
+  address?: string;
   links: Link[];
   summaryHtml: string;
   sections: Section[];
@@ -128,6 +137,9 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
   const title = String(data.title ?? '');
   const lang = data.lang ? String(data.lang) : undefined;
   const photo = data.photo ? parsePhotoString(String(data.photo)) : null;
+  const email = data.email ? String(data.email) : undefined;
+  const phone = data.phone ? String(data.phone) : undefined;
+  const address = data.address ? String(data.address) : undefined;
   const rawLinks: string[] = Array.isArray(data.links) ? data.links : [];
   const links = rawLinks.map((link) => parseLinkString(link));
 
@@ -147,9 +159,12 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
 
     const entries: TimelineEntry[] = entryBlocks.map(({ title: entryTitle, body: entryBody }) => {
       const parts = entryTitle.split('|').map((part) => part.trim());
+      const orgPart = parts[1] ?? '';
+      const orgLink = tryParseLink(orgPart);
       return {
         title: parts[0] ?? '',
-        org: parts[1] ?? '',
+        org: orgLink ? orgLink.label : orgPart,
+        orgUrl: orgLink?.url,
         dates: parts[2] ?? '',
         html: entryBody ? (marked.parse(entryBody) as string) : '',
       };
@@ -158,5 +173,5 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
     return { type: 'timeline', heading, slug, introHtml, entries };
   });
 
-  return { name, title, lang, photo, links, summaryHtml, sections };
+  return { name, title, lang, photo, email, phone, address, links, summaryHtml, sections };
 }

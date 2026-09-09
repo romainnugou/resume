@@ -5,11 +5,15 @@ export interface Props {
   name: string;
   title: string;
   photo: Photo | null;
+  email?: string;
+  phone?: string;
+  address?: string;
   links: Link[];
   summaryHtml: string;
 }
 
-const { name, title, photo, links, summaryHtml } = Astro.props;
+const { name, title, photo, email, phone, address, links, summaryHtml } = Astro.props;
+const hasContactInfo = email || phone || address || links.length > 0;
 ---
 
 <header class="mb-10 flex flex-col sm:flex-row gap-6 sm:items-center">
@@ -26,30 +30,41 @@ const { name, title, photo, links, summaryHtml } = Astro.props;
     <h1 class="text-3xl font-bold tracking-tight">{name}</h1>
     <p class="text-lg text-gray-600 dark:text-gray-400">{title}</p>
     {
-      links.length > 0 && (
-        <ul class="flex flex-wrap gap-4 mt-2 text-sm">
+      hasContactInfo && (
+        <ul class="mt-2 space-y-1 text-sm">
+          {email && (
+            <li>
+              Email:{' '}
+              <a href={`mailto:${email}`} class="underline hover:no-underline">
+                {email}
+              </a>
+            </li>
+          )}
+          {phone && (
+            <li>
+              Phone:{' '}
+              <a href={`tel:${phone}`} class="underline hover:no-underline">
+                {phone}
+              </a>
+            </li>
+          )}
+          {address && <li>Address: {address}</li>}
           {links.map((link) => (
             <li>
+              {link.label}:{' '}
               <a
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="underline hover:no-underline"
               >
-                {link.label}
+                {link.url}
               </a>
             </li>
           ))}
         </ul>
       )
     }
-    {
-      summaryHtml && (
-        <div
-          class="mt-4 space-y-2 text-gray-800 dark:text-gray-200"
-          set:html={summaryHtml}
-        />
-      )
-    }
+    {summaryHtml && <div class="markdown-content mt-4" set:html={summaryHtml} />}
   </div>
 </header>

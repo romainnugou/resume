@@ -1,16 +1,18 @@
 ---
 name: Jane Doe
 title: Ingénieure Logicielle
+email: jane@example.com
+phone: "+1 555-555-5555"
+address: Montréal, QC
 links:
   - "[GitHub](https://github.com/janedoe)"
-  - "[Email](mailto:jane@example.com)"
 ---
 
 Je construis des systèmes fiables depuis **8+ ans**, avec un focus sur les outils pour développeurs et les systèmes distribués.
 
 ## Expérience
 
-### Ingénieure Senior | Acme Corp | 2022 - Présent
+### Ingénieure Senior | [Acme Corp](https://acme.example.com) | 2022 - Présent
 J'ai dirigé l'équipe plateforme dans la réécriture du pipeline de déploiement, réduisant de moitié le temps de release.
 
 ### Ingénieure | Beta Inc | 2019 - 2022

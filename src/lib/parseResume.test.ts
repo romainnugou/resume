@@ -222,4 +222,62 @@ Did things.
     );
     expect(experience?.slug).toBe('experience');
   });
+
+  it('parses optional email, phone, and address frontmatter fields', () => {
+    const withContact = `---
+name: Jane Doe
+title: Software Engineer
+email: jane@example.com
+phone: "+1 555-555-5555"
+address: Montreal, QC
+---
+
+## Experience
+
+### Eng | Acme | 2020
+`;
+    const resume = parseResumeMarkdown(withContact);
+    expect(resume.email).toBe('jane@example.com');
+    expect(resume.phone).toBe('+1 555-555-5555');
+    expect(resume.address).toBe('Montreal, QC');
+  });
+
+  it('leaves email, phone, and address undefined when absent', () => {
+    const resume = parseResumeMarkdown(sample);
+    expect(resume.email).toBeUndefined();
+    expect(resume.phone).toBeUndefined();
+    expect(resume.address).toBeUndefined();
+  });
+
+  it('parses an optional link on the org piece of a timeline entry', () => {
+    const withOrgLink = `---
+name: Jane Doe
+title: Software Engineer
+---
+
+## Experience
+
+### Senior Engineer | [Acme Corp](https://acme.com) | 2022 - Present
+Led the platform team.
+`;
+    const experience = parseResumeMarkdown(withOrgLink).sections.find(
+      (s) => s.heading === 'Experience'
+    );
+    expect(experience?.type).toBe('timeline');
+    if (experience?.type === 'timeline') {
+      expect(experience.entries[0].org).toBe('Acme Corp');
+      expect(experience.entries[0].orgUrl).toBe('https://acme.com');
+    }
+  });
+
+  it('leaves orgUrl undefined when the org piece is plain text', () => {
+    const experience = parseResumeMarkdown(sample).sections.find(
+      (s) => s.heading === 'Experience'
+    );
+    expect(experience?.type).toBe('timeline');
+    if (experience?.type === 'timeline') {
+      expect(experience.entries[0].org).toBe('Acme Corp');
+      expect(experience.entries[0].orgUrl).toBeUndefined();
+    }
+  });
 });

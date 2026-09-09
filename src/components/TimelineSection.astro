@@ -9,14 +9,14 @@ export interface Props {
 const { section } = Astro.props;
 ---
 
-<section id={section.slug} class="mb-10 scroll-mt-20">
+<section id={section.slug} class="mb-10 scroll-mt-24">
   <h2 class="text-xl font-semibold mb-4 border-b border-gray-200 dark:border-gray-800 pb-1">
     {section.heading}
   </h2>
-  {section.introHtml && (
-    <div class="space-y-2 text-gray-800 dark:text-gray-200 mb-4" set:html={section.introHtml} />
-  )}
-  <div class="relative border-l-2 border-gray-300 dark:border-gray-700 pl-6 space-y-8">
-    {section.entries.map((entry) => <TimelineEntry entry={entry} />)}
+  {section.introHtml && <div class="markdown-content mb-4" set:html={section.introHtml} />}
+  <div class="space-y-8">
+    {section.entries.map((entry, i) => (
+      <TimelineEntry entry={entry} isLast={i === section.entries.length - 1} />
+    ))}
   </div>
 </section>

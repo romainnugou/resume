@@ -1,21 +1,73 @@
 ---
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import ThemeToggle from './ThemeToggle.astro';
 import type { Section } from '../lib/parseResume';
 
 export interface Props {
   sections: Section[];
+  defaultLocale: string;
+  otherLocales: string[];
+  currentLocale: string;
 }
 
-const { sections } = Astro.props;
+const { sections, defaultLocale, otherLocales, currentLocale } = Astro.props;
 ---
 
-{
-  sections.length > 0 && (
-    <nav class="print:hidden mb-8 flex flex-wrap gap-4 text-sm border-b border-gray-200 dark:border-gray-800 pb-4">
-      {sections.map((section) => (
-        <a href={`#${section.slug}`} class="hover:underline">
-          {section.heading}
-        </a>
-      ))}
-    </nav>
-  )
-}
+<nav class="print:hidden sticky top-0 z-10 mb-8 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
+  <div class="mx-auto flex max-w-3xl items-center justify-between gap-4 px-4 py-3">
+    {
+      sections.length > 0 && (
+        <button
+          id="nav-toggle"
+          type="button"
+          class="rounded border border-gray-300 px-3 py-1 text-sm dark:border-gray-700 md:hidden"
+          aria-label="Toggle navigation menu"
+          aria-expanded="false"
+          aria-controls="nav-panel"
+        >
+          Menu
+        </button>
+      )
+    }
+    {
+      sections.length > 0 && (
+        <div class="hidden flex-wrap items-center gap-4 text-sm md:flex">
+          {sections.map((section) => (
+            <a href={`#${section.slug}`} class="hover:underline">
+              {section.heading}
+            </a>
+          ))}
+        </div>
+      )
+    }
+    <div class="ml-auto flex items-center gap-3">
+      <LanguageSwitcher
+        defaultLocale={defaultLocale}
+        otherLocales={otherLocales}
+        currentLocale={currentLocale}
+      />
+      <ThemeToggle />
+    </div>
+  </div>
+  {
+    sections.length > 0 && (
+      <div id="nav-panel" hidden class="flex flex-col gap-3 px-4 pb-4 text-sm md:hidden">
+        {sections.map((section) => (
+          <a href={`#${section.slug}`} class="hover:underline">
+            {section.heading}
+          </a>
+        ))}
+      </div>
+    )
+  }
+</nav>
+
+<script is:inline>
+  const navToggle = document.getElementById('nav-toggle');
+  const navPanel = document.getElementById('nav-panel');
+  navToggle?.addEventListener('click', () => {
+    const isHidden = navPanel.hidden;
+    navPanel.hidden = !isHidden;
+    navToggle.setAttribute('aria-expanded', String(isHidden));
+  });
+</script>
