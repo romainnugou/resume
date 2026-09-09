@@ -39,3 +39,39 @@ export function slugify(heading: string): string {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
+export function splitOnHeadingLevel(
+  text: string,
+  level: number
+): { title: string; body: string }[] {
+  const marker = '#'.repeat(level) + ' ';
+  const lines = text.split('\n');
+  const blocks: { title: string; body: string }[] = [];
+  let current: { title: string; bodyLines: string[] } | null = null;
+
+  for (const line of lines) {
+    if (line.startsWith(marker)) {
+      if (current) {
+        blocks.push({ title: current.title, body: current.bodyLines.join('\n').trim() });
+      }
+      current = { title: line.slice(marker.length).trim(), bodyLines: [] };
+    } else if (current) {
+      current.bodyLines.push(line);
+    }
+  }
+  if (current) {
+    blocks.push({ title: current.title, body: current.bodyLines.join('\n').trim() });
+  }
+  return blocks;
+}
+
+export function splitSummaryAndBody(body: string): { summaryMd: string; rest: string } {
+  const match = body.match(/^## /m);
+  if (!match || match.index === undefined) {
+    return { summaryMd: body.trim(), rest: '' };
+  }
+  return {
+    summaryMd: body.slice(0, match.index).trim(),
+    rest: body.slice(match.index).trim(),
+  };
+}
