@@ -1,3 +1,6 @@
+import matter from 'gray-matter';
+import { marked } from 'marked';
+
 export interface Link {
   label: string;
   url: string;
@@ -74,4 +77,74 @@ export function splitSummaryAndBody(body: string): { summaryMd: string; rest: st
     summaryMd: body.slice(0, match.index).trim(),
     rest: body.slice(match.index).trim(),
   };
+}
+
+export interface TimelineEntry {
+  title: string;
+  org: string;
+  dates: string;
+  html: string;
+}
+
+export interface ProseSection {
+  type: 'prose';
+  heading: string;
+  slug: string;
+  html: string;
+}
+
+export interface TimelineSectionData {
+  type: 'timeline';
+  heading: string;
+  slug: string;
+  entries: TimelineEntry[];
+}
+
+export type Section = ProseSection | TimelineSectionData;
+
+export interface ParsedResume {
+  name: string;
+  title: string;
+  lang?: string;
+  photo: Photo | null;
+  links: Link[];
+  summaryHtml: string;
+  sections: Section[];
+}
+
+export function parseResumeMarkdown(raw: string): ParsedResume {
+  const { data, content } = matter(raw);
+
+  const name = String(data.name ?? '');
+  const title = String(data.title ?? '');
+  const lang = data.lang ? String(data.lang) : undefined;
+  const photo = data.photo ? parsePhotoString(String(data.photo)) : null;
+  const rawLinks: string[] = Array.isArray(data.links) ? data.links : [];
+  const links = rawLinks.map((link) => parseLinkString(link));
+
+  const { summaryMd, rest } = splitSummaryAndBody(content);
+  const summaryHtml = summaryMd ? (marked.parse(summaryMd) as string) : '';
+
+  const sections: Section[] = splitOnHeadingLevel(rest, 2).map(({ title: heading, body }) => {
+    const slug = slugify(heading);
+    const entryBlocks = splitOnHeadingLevel(body, 3);
+
+    if (entryBlocks.length === 0) {
+      return { type: 'prose', heading, slug, html: marked.parse(body) as string };
+    }
+
+    const entries: TimelineEntry[] = entryBlocks.map(({ title: entryTitle, body: entryBody }) => {
+      const parts = entryTitle.split('|').map((part) => part.trim());
+      return {
+        title: parts[0] ?? '',
+        org: parts[1] ?? '',
+        dates: parts[2] ?? '',
+        html: entryBody ? (marked.parse(entryBody) as string) : '',
+      };
+    });
+
+    return { type: 'timeline', heading, slug, entries };
+  });
+
+  return { name, title, lang, photo, links, summaryHtml, sections };
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseLinkString, parsePhotoString, slugify, splitOnHeadingLevel, splitSummaryAndBody } from './parseResume';
+import { parseLinkString, parsePhotoString, slugify, splitOnHeadingLevel, splitSummaryAndBody, parseResumeMarkdown } from './parseResume';
 
 describe('parseLinkString', () => {
   it('parses a markdown link into label and url', () => {
@@ -76,5 +76,110 @@ describe('splitSummaryAndBody', () => {
       summaryMd: 'Just a summary, nothing else.',
       rest: '',
     });
+  });
+});
+
+describe('parseResumeMarkdown', () => {
+  const sample = `---
+name: Jane Doe
+title: Software Engineer
+lang: en
+photo: "![Jane Doe](./photo.jpg)"
+links:
+  - "[GitHub](https://github.com/janedoe)"
+  - "[Email](mailto:jane@example.com)"
+---
+
+Building reliable systems for **8+ years**.
+
+## Experience
+
+### Senior Engineer | Acme Corp | 2022 - Present
+Led the platform team.
+
+### Engineer | Beta Inc | 2019 - 2022
+Built the core API.
+
+## Education
+
+### MSc Computer Science | Some University | 2015 - 2019
+
+## Languages
+
+- English (native)
+- French (fluent)
+`;
+
+  it('parses frontmatter fields', () => {
+    const resume = parseResumeMarkdown(sample);
+    expect(resume.name).toBe('Jane Doe');
+    expect(resume.title).toBe('Software Engineer');
+    expect(resume.lang).toBe('en');
+    expect(resume.photo).toEqual({ alt: 'Jane Doe', url: './photo.jpg' });
+    expect(resume.links).toEqual([
+      { label: 'GitHub', url: 'https://github.com/janedoe' },
+      { label: 'Email', url: 'mailto:jane@example.com' },
+    ]);
+  });
+
+  it('renders the summary as markdown', () => {
+    const resume = parseResumeMarkdown(sample);
+    expect(resume.summaryHtml).toContain('<strong>8+ years</strong>');
+  });
+
+  it('builds a timeline section with parsed entries', () => {
+    const resume = parseResumeMarkdown(sample);
+    const experience = resume.sections.find((s) => s.heading === 'Experience');
+    expect(experience?.type).toBe('timeline');
+    if (experience?.type === 'timeline') {
+      expect(experience.entries).toEqual([
+        {
+          title: 'Senior Engineer',
+          org: 'Acme Corp',
+          dates: '2022 - Present',
+          html: expect.stringContaining('Led the platform team'),
+        },
+        {
+          title: 'Engineer',
+          org: 'Beta Inc',
+          dates: '2019 - 2022',
+          html: expect.stringContaining('Built the core API'),
+        },
+      ]);
+    }
+  });
+
+  it('handles a timeline entry missing a piece without throwing', () => {
+    const education = parseResumeMarkdown(sample).sections.find(
+      (s) => s.heading === 'Education'
+    );
+    expect(education?.type).toBe('timeline');
+    if (education?.type === 'timeline') {
+      expect(education.entries).toEqual([
+        {
+          title: 'MSc Computer Science',
+          org: 'Some University',
+          dates: '2015 - 2019',
+          html: '',
+        },
+      ]);
+    }
+  });
+
+  it('falls back to a prose section when there are no ### entries', () => {
+    const languages = parseResumeMarkdown(sample).sections.find(
+      (s) => s.heading === 'Languages'
+    );
+    expect(languages?.type).toBe('prose');
+    if (languages?.type === 'prose') {
+      expect(languages.html).toContain('English (native)');
+    }
+  });
+
+  it('slugifies section headings', () => {
+    const experience = parseResumeMarkdown(sample).sections.find(
+      (s) => s.heading === 'Experience'
+    );
+    expect(experience?.slug).toBe('experience');
   });
 });
