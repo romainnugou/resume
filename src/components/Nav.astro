@@ -8,9 +8,10 @@ export interface Props {
   defaultLocale: string;
   otherLocales: string[];
   currentLocale: string;
+  class?: string;
 }
 
-const { sections, defaultLocale, otherLocales, currentLocale } = Astro.props;
+const { sections, defaultLocale, otherLocales, currentLocale, class: className } = Astro.props;
 ---
 
 <!-- Mobile: top bar with a collapsible section-links menu. Hidden entirely at md+. -->
@@ -53,7 +54,12 @@ const { sections, defaultLocale, otherLocales, currentLocale } = Astro.props;
 </nav>
 
 <!-- Desktop: sticky column beside the content (not pinned to the viewport edge). -->
-<nav class="print:hidden hidden md:sticky md:top-8 md:z-10 md:flex md:flex-col md:self-start">
+<nav
+  class:list={[
+    'print:hidden hidden md:sticky md:top-8 md:z-10 md:flex md:flex-col md:self-start',
+    className,
+  ]}
+>
   <div class="flex flex-col gap-3 text-sm">
     {sections.map((section) => (
       <a href={`#${section.slug}`} class="hover:underline">

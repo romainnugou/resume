@@ -18,22 +18,32 @@ const { resume, lang, defaultLocale, otherLocales } = Astro.props;
 ---
 
 <ResumeLayout name={resume.name} title={resume.title} lang={lang}>
-  <Header name={resume.name} title={resume.title} photo={resume.photo} />
   <div class="md:grid md:grid-cols-[14rem_1fr] md:gap-10">
     <Nav
       sections={resume.sections}
       defaultLocale={defaultLocale}
       otherLocales={otherLocales}
       currentLocale={lang}
+      class="md:col-start-1 md:row-start-2"
     />
-    <div>
+    <Header
+      name={resume.name}
+      title={resume.title}
+      photo={resume.photo}
+      class="md:col-start-2 md:row-start-1"
+    />
+    <div class="md:col-start-2 md:row-start-2">
       <ContactInfo
         email={resume.email}
         phone={resume.phone}
         address={resume.address}
         links={resume.links}
       />
-      {resume.summaryHtml && <div class="markdown-content mt-6" set:html={resume.summaryHtml} />}
+      {
+        resume.summaryHtml && (
+          <div class="markdown-content mt-6 mb-10" set:html={resume.summaryHtml} />
+        )
+      }
       {
         resume.sections.map((section) =>
           section.type === 'timeline' ? (
