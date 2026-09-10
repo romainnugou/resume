@@ -10,11 +10,14 @@
 </button>
 
 <script is:inline>
-  document.querySelectorAll('.theme-toggle').forEach((button) => {
-    button.addEventListener('click', () => {
+  if (!window.__themeToggleBound) {
+    window.__themeToggleBound = true;
+    document.addEventListener('click', (e) => {
+      const button = e.target.closest('.theme-toggle');
+      if (!button) return;
       const root = document.documentElement;
       const isDark = root.classList.toggle('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
-  });
+  }
 </script>

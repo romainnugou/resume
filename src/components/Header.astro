@@ -5,13 +5,12 @@ export interface Props {
   name: string;
   title: string;
   photo: Photo | null;
-  class?: string;
 }
 
-const { name, title, photo, class: className } = Astro.props;
+const { name, title, photo } = Astro.props;
 ---
 
-<header class:list={['mb-10 md:mb-0 flex flex-col sm:flex-row gap-6 sm:items-center', className]}>
+<header class="mb-10 flex flex-col sm:flex-row gap-6 sm:items-center">
   {
     photo && (
       <img

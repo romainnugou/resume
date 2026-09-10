@@ -13,14 +13,16 @@ const allLocales = [defaultLocale, ...otherLocales];
   allLocales.length > 1 && (
     <div class="flex gap-3 text-sm">
       {allLocales.map((locale) => (
-        <a
-          href={locale === defaultLocale ? '/' : `/${locale}/`}
-          class={locale === currentLocale ? 'font-semibold underline' : 'hover:underline'}
-          aria-current={locale === currentLocale ? 'page' : undefined}
+        <button
+          type="button"
+          data-lang-switch={locale}
+          class="lang-switch-btn hover:underline"
+          aria-current={locale === currentLocale ? 'true' : 'false'}
         >
           {locale.toUpperCase()}
-        </a>
+        </button>
       ))}
     </div>
   )
 }
+

@@ -1,6 +1,17 @@
 import matter from 'gray-matter';
 import { marked } from 'marked';
 
+marked.use({
+  renderer: {
+    link({ href, title, tokens }) {
+      const text = this.parser.parseInline(tokens);
+      const titleAttr = title ? ` title="${title}"` : '';
+      const blank = /^(mailto:|tel:)/.test(href) ? '' : ' target="_blank" rel="noopener noreferrer"';
+      return `<a href="${href}"${titleAttr}${blank}>${text}</a>`;
+    },
+  },
+});
+
 export interface Link {
   label: string;
   url: string;

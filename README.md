@@ -1,6 +1,11 @@
 # Resume
 
-A static, developer-friendly resume site generated from a markdown file. No backend, no CMS — clone, edit `resume.md`, deploy.
+A static, developer-friendly resume site generated from a markdown file.
+No backend, no CMS — clone, edit `resume.md`, deploy.
+
+## Demo
+
+[resume.romain.ng](https://resume.romain.ng/)
 
 ## Quick start
 
@@ -16,9 +21,9 @@ Edit `resume.md` in the project root with your own name, title, contact info, li
 - Each `## Heading` becomes a page section (nav, anchor, etc). A section's content can be plain markdown prose, or a bulleted/numbered list (`- item`) — both render normally, useful for Languages, Skills, and similar lists.
 - Within a section, `### Title | Org | Dates` starts a timeline entry (used for Experience, Education, etc). The `Org` piece can optionally be a markdown link (e.g. `### Senior Engineer | [Acme Corp](https://acme.com) | 2022 - Present`) to link the company/school name — plain text also works. Any text between the section heading and the first `###` entry renders as an intro paragraph above the timeline. A section with no `###` entries just renders as plain markdown.
 
-## Navigation, language, and dark mode
+## Language switcher and dark mode
 
-On desktop, a sidebar to the left of the content (not the screen edge) holds the section links, then a divider, then the language switcher (when more than one language exists) and the dark-mode toggle (a half-filled circle icon) — it starts at the same height as the contact info and stays reachable while scrolling. On narrower screens it collapses into a top bar: the language switcher and theme toggle stay visible, and a hamburger icon opens the section links as a full-screen menu (closed by default), closable via its own X button or by tapping a link. Dark mode follows your system preference by default, the toggle overrides it and is remembered for next visit, and it automatically switches back to light mode while printing regardless of the current setting.
+A small bar floats in the top-right corner of the page holding the language switcher (when more than one language exists) and the dark-mode toggle (a half-filled circle icon). Switching language doesn't navigate — every language is rendered into the same static page and the switcher just shows/hides the matching block client-side, remembering your choice for next visit (falling back to your browser's language on first visit). Dark mode follows your system preference by default, the toggle overrides it and is remembered for next visit, and it automatically switches back to light mode while printing regardless of the current setting.
 
 ## Multiple languages
 
@@ -26,7 +31,7 @@ Add `resume.<locale>.md` (e.g. `resume.fr.md`) for each additional language — 
 
 ## Print / PDF
 
-Use your browser's print dialog (Cmd/Ctrl+P → Save as PDF). The navigation (sidebar or top bar) is hidden when printing, and the page always prints in light mode regardless of your current setting.
+Use your browser's print dialog (Cmd/Ctrl+P → Save as PDF). The top-right bar is hidden when printing, and the page always prints in light mode regardless of your current setting.
 
 ## Build & deploy
 
@@ -41,3 +46,7 @@ Deploy the `dist/` folder to Cloudflare Pages (build command: `pnpm build`, outp
 ```bash
 pnpm test      # runs the parser/discovery unit tests
 ```
+
+## About
+
+Made by [Romain Nugou](https://romain.ng/).

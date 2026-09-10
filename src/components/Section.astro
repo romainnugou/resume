@@ -3,12 +3,13 @@ import type { ProseSection } from '../lib/parseResume';
 
 export interface Props {
   section: ProseSection;
+  idPrefix?: string;
 }
 
-const { section } = Astro.props;
+const { section, idPrefix } = Astro.props;
 ---
 
-<section id={section.slug} class="mb-10 scroll-mt-24">
+<section id={idPrefix ? `${idPrefix}-${section.slug}` : section.slug} class="mb-10 scroll-mt-24">
   <h2 class="text-xl font-semibold mb-4 border-b border-gray-200 dark:border-gray-800 pb-1">
     {section.heading}
   </h2>

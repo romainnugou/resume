@@ -8,51 +8,45 @@ import TimelineSection from './TimelineSection.astro';
 import type { ParsedResume } from '../lib/parseResume';
 
 export interface Props {
-  resume: ParsedResume;
-  lang: string;
+  resumes: { locale: string; resume: ParsedResume }[];
   defaultLocale: string;
-  otherLocales: string[];
 }
 
-const { resume, lang, defaultLocale, otherLocales } = Astro.props;
+const { resumes, defaultLocale } = Astro.props;
+const otherLocales = resumes.map((r) => r.locale).filter((l) => l !== defaultLocale);
+const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
 ---
 
-<ResumeLayout name={resume.name} title={resume.title} lang={lang}>
-  <div class="md:grid md:grid-cols-[14rem_1fr] md:gap-10">
-    <Nav
-      sections={resume.sections}
-      defaultLocale={defaultLocale}
-      otherLocales={otherLocales}
-      currentLocale={lang}
-      class="md:col-start-1 md:row-start-2"
-    />
-    <Header
-      name={resume.name}
-      title={resume.title}
-      photo={resume.photo}
-      class="md:col-start-2 md:row-start-1"
-    />
-    <div class="md:col-start-2 md:row-start-2">
-      <ContactInfo
-        email={resume.email}
-        phone={resume.phone}
-        address={resume.address}
-        links={resume.links}
-      />
-      {
-        resume.summaryHtml && (
-          <div class="markdown-content mt-6 mb-10" set:html={resume.summaryHtml} />
-        )
-      }
-      {
-        resume.sections.map((section) =>
-          section.type === 'timeline' ? (
-            <TimelineSection section={section} />
-          ) : (
-            <Section section={section} />
-          )
-        )
-      }
-    </div>
+<ResumeLayout
+  name={defaultResume.name}
+  title={defaultResume.title}
+  lang={defaultLocale}
+  locales={resumes.map((r) => r.locale)}
+>
+  <div class="grid">
+    {
+      resumes.map(({ locale, resume }) => (
+        <div data-resume-lang={locale}>
+          <Nav defaultLocale={defaultLocale} otherLocales={otherLocales} currentLocale={locale} />
+          <Header name={resume.name} title={resume.title} photo={resume.photo} />
+          <ContactInfo
+            email={resume.email}
+            phone={resume.phone}
+            address={resume.address}
+            links={resume.links}
+          />
+          {resume.summaryHtml && (
+            <div class="markdown-content mt-6 mb-10" set:html={resume.summaryHtml} />
+          )}
+          {resume.sections.map((section) =>
+            section.type === 'timeline' ? (
+              <TimelineSection section={section} idPrefix={locale} />
+            ) : (
+              <Section section={section} idPrefix={locale} />
+            )
+          )}
+        </div>
+      ))
+    }
   </div>
 </ResumeLayout>

@@ -1,117 +1,23 @@
 ---
 import LanguageSwitcher from './LanguageSwitcher.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import type { Section } from '../lib/parseResume';
 
 export interface Props {
-  sections: Section[];
   defaultLocale: string;
   otherLocales: string[];
   currentLocale: string;
-  class?: string;
 }
 
-const { sections, defaultLocale, otherLocales, currentLocale, class: className } = Astro.props;
+const { defaultLocale, otherLocales, currentLocale } = Astro.props;
 ---
 
-<!-- Mobile: top bar; hamburger opens a full-screen menu. Hidden entirely at md+. -->
-<nav class="print:hidden md:hidden sticky top-0 z-20 mb-10 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
-  <div class="flex items-center justify-end gap-4 px-4 py-3">
+<div class="print:hidden pointer-events-none fixed inset-x-0 top-0 z-20 mx-auto flex justify-end lg:max-w-3xl lg:px-4">
+  <nav class="pointer-events-auto flex items-center gap-3 rounded-bl-lg border-l border-b border-gray-200 bg-white/95 px-4 py-2 backdrop-blur lg:rounded-br-lg lg:border-r dark:border-gray-800 dark:bg-gray-900/95">
     <LanguageSwitcher
       defaultLocale={defaultLocale}
       otherLocales={otherLocales}
       currentLocale={currentLocale}
     />
     <ThemeToggle />
-    {
-      sections.length > 0 && (
-        <button
-          id="nav-toggle"
-          type="button"
-          class="p-1.5"
-          aria-label="Open navigation menu"
-          aria-expanded="false"
-          aria-controls="nav-panel"
-        >
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-            <path
-              d="M4 6h16M4 12h16M4 18h16"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
-        </button>
-      )
-    }
-  </div>
-</nav>
-
-{
-  sections.length > 0 && (
-    <div
-      id="nav-panel"
-      class="print:hidden hidden md:hidden fixed inset-0 z-30 flex flex-col gap-6 bg-white p-6 text-lg dark:bg-gray-900"
-    >
-      <button id="nav-close" type="button" class="self-end p-1.5" aria-label="Close navigation menu">
-        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-          <path
-            d="M6 6l12 12M18 6L6 18"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
-      </button>
-      {sections.map((section) => (
-        <a href={`#${section.slug}`} class="hover:underline">
-          {section.heading}
-        </a>
-      ))}
-    </div>
-  )
-}
-
-<!-- Desktop: sticky column beside the content (not pinned to the viewport edge). -->
-<nav
-  class:list={[
-    'print:hidden hidden md:sticky md:top-8 md:z-10 md:flex md:flex-col md:self-start',
-    className,
-  ]}
->
-  <div class="flex flex-col gap-3 text-sm">
-    {sections.map((section) => (
-      <a href={`#${section.slug}`} class="hover:underline">
-        {section.heading}
-      </a>
-    ))}
-  </div>
-  <div class="mt-4 flex items-center gap-3 border-t border-gray-200 pt-4 dark:border-gray-800">
-    <LanguageSwitcher
-      defaultLocale={defaultLocale}
-      otherLocales={otherLocales}
-      currentLocale={currentLocale}
-    />
-    <ThemeToggle />
-  </div>
-</nav>
-
-<script is:inline>
-  const navToggle = document.getElementById('nav-toggle');
-  const navClose = document.getElementById('nav-close');
-  const navPanel = document.getElementById('nav-panel');
-
-  function openNavPanel() {
-    navPanel.classList.remove('hidden');
-    navToggle?.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeNavPanel() {
-    navPanel.classList.add('hidden');
-    navToggle?.setAttribute('aria-expanded', 'false');
-  }
-
-  navToggle?.addEventListener('click', openNavPanel);
-  navClose?.addEventListener('click', closeNavPanel);
-  navPanel?.querySelectorAll('a').forEach((link) => link.addEventListener('click', closeNavPanel));
-</script>
+  </nav>
+</div>
