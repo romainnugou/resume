@@ -18,7 +18,7 @@ Edit `resume.md` in the project root with your own name, title, contact info, li
 
 ## Navigation, language, and dark mode
 
-On desktop, a sidebar to the left of the content (not the screen edge) holds the section links, then a divider, then the language switcher (when more than one language exists) and the dark-mode toggle (a half-filled circle icon) — it starts at the same height as the contact info and stays reachable while scrolling. On narrower screens it collapses into a top bar: section links sit behind a "Menu" button, while the language switcher and theme toggle stay visible at every size. Dark mode follows your system preference by default, the toggle overrides it and is remembered for next visit, and it automatically switches back to light mode while printing regardless of the current setting.
+On desktop, a sidebar to the left of the content (not the screen edge) holds the section links, then a divider, then the language switcher (when more than one language exists) and the dark-mode toggle (a half-filled circle icon) — it starts at the same height as the contact info and stays reachable while scrolling. On narrower screens it collapses into a top bar: the language switcher and theme toggle stay visible, and a hamburger icon opens the section links as a full-screen menu (closed by default), closable via its own X button or by tapping a link. Dark mode follows your system preference by default, the toggle overrides it and is remembered for next visit, and it automatically switches back to light mode while printing regardless of the current setting.
 
 ## Multiple languages
 
