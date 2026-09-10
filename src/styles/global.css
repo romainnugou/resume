@@ -29,4 +29,8 @@
   .markdown-content a {
     @apply underline hover:no-underline;
   }
+
+  .nav-tooltip {
+    @apply pointer-events-none absolute left-1/2 top-full z-30 mt-2 -translate-x-1/2 whitespace-nowrap rounded border border-gray-300 bg-white px-2 py-1 text-xs text-gray-900 opacity-0 shadow transition-opacity duration-150 group-hover:opacity-100 before:absolute before:left-1/2 before:top-0 before:-translate-x-1/2 before:-translate-y-full before:border-[5px] before:border-transparent before:border-b-gray-300 before:content-[''] after:absolute after:left-1/2 after:top-0 after:-translate-x-1/2 after:-translate-y-full after:border-4 after:border-transparent after:border-b-white after:content-[''] dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 dark:before:border-b-gray-600 dark:after:border-b-gray-900;
+  }
 }

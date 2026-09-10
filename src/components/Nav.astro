@@ -21,50 +21,56 @@ const href = `data:text/markdown;charset=utf-8,${encodeURIComponent(markdown)}`;
       currentLocale={currentLocale}
     />
     <ThemeToggle />
-    <button
-      type="button"
-      onclick="window.print()"
-      class="flex h-7 w-7 items-center justify-center hover:opacity-70"
-      aria-label="Download resume as PDF"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        width="18"
-        height="18"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
+    <span class="group relative flex">
+      <button
+        type="button"
+        onclick="window.print()"
+        class="flex h-7 w-7 items-center justify-center hover:opacity-70"
+        aria-label="Download resume as PDF"
       >
-        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-        <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-        <path d="M12 18v-6" />
-        <path d="m9 15 3 3 3-3" />
-      </svg>
-    </button>
-    <a
-      href={href}
-      download={`resume.${currentLocale}.md`}
-      class="flex h-7 w-7 items-center justify-center hover:opacity-70"
-      aria-label="Download resume as Markdown"
-    >
-      <svg
-        viewBox="0 0 24 24"
-        width="18"
-        height="18"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        aria-hidden="true"
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+          <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+          <path d="M12 18v-6" />
+          <path d="m9 15 3 3 3-3" />
+        </svg>
+      </button>
+      <span class="nav-tooltip" aria-hidden="true">Print / Save as PDF</span>
+    </span>
+    <span class="group relative flex">
+      <a
+        href={href}
+        download={`resume.${currentLocale}.md`}
+        class="flex h-7 w-7 items-center justify-center hover:opacity-70"
+        aria-label="Download resume as Markdown"
       >
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <path d="M7 10l5 5 5-5" />
-        <path d="M12 15V3" />
-      </svg>
-    </a>
+        <svg
+          viewBox="0 0 24 24"
+          width="18"
+          height="18"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <path d="M7 10l5 5 5-5" />
+          <path d="M12 15V3" />
+        </svg>
+      </a>
+      <span class="nav-tooltip" aria-hidden="true">Download as Markdown</span>
+    </span>
   </nav>
 </div>

@@ -1,13 +1,16 @@
-<button
-  type="button"
-  class="theme-toggle print:hidden flex h-7 w-7 items-center justify-center hover:opacity-70"
-  aria-label="Toggle dark mode"
->
-  <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-    <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" />
-    <path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" />
-  </svg>
-</button>
+<span class="group relative flex print:hidden">
+  <button
+    type="button"
+    class="theme-toggle flex h-7 w-7 items-center justify-center hover:opacity-70"
+    aria-label="Toggle dark mode"
+  >
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" />
+      <path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" />
+    </svg>
+  </button>
+  <span class="nav-tooltip" aria-hidden="true">Toggle theme</span>
+</span>
 
 <script is:inline>
   (function () {

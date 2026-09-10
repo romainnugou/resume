@@ -7,19 +7,23 @@ export interface Props {
 
 const { defaultLocale, otherLocales, currentLocale } = Astro.props;
 const allLocales = [defaultLocale, ...otherLocales];
+const languageName = new Intl.DisplayNames(['en'], { type: 'language' });
 ---
 
 {
   allLocales.length > 1 &&
     allLocales.map((locale) => (
-      <button
-        type="button"
-        data-lang-switch={locale}
-        class="lang-switch-btn flex h-7 w-7 items-center justify-center text-sm hover:underline"
-        aria-current={locale === currentLocale ? 'true' : 'false'}
-      >
-        {locale.toUpperCase()}
-      </button>
+      <span class="group relative flex">
+        <button
+          type="button"
+          data-lang-switch={locale}
+          class="lang-switch-btn flex h-7 w-7 items-center justify-center text-sm hover:underline"
+          aria-current={locale === currentLocale ? 'true' : 'false'}
+        >
+          {locale.toUpperCase()}
+        </button>
+        <span class="nav-tooltip" aria-hidden="true">{languageName.of(locale)}</span>
+      </span>
     ))
 }
 
