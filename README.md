@@ -18,7 +18,7 @@ Edit `resume.md` in the project root with your own name, title, contact info, li
 
 ## Navigation, language, and dark mode
 
-A sticky bar at the top of the page holds the section links, the language switcher (when more than one language exists), and the dark-mode toggle. On narrow screens the section links collapse behind a "Menu" button; the language switcher and theme toggle stay visible at every size. Dark mode follows your system preference by default, the toggle overrides it and is remembered for next visit, and it automatically switches back to light mode while printing regardless of the current setting.
+On desktop, a fixed sidebar on the left holds the section links, the language switcher (when more than one language exists), and the dark-mode toggle (a half-filled circle icon). On narrower screens it collapses into a top bar: section links sit behind a "Menu" button, while the language switcher and theme toggle stay visible at every size. Dark mode follows your system preference by default, the toggle overrides it and is remembered for next visit, and it automatically switches back to light mode while printing regardless of the current setting.
 
 ## Multiple languages
 
@@ -26,7 +26,7 @@ Add `resume.<locale>.md` (e.g. `resume.fr.md`) for each additional language — 
 
 ## Print / PDF
 
-Use your browser's print dialog (Cmd/Ctrl+P → Save as PDF). The navigation bar (section links, language switcher, theme toggle) is hidden when printing, and the page always prints in light mode regardless of your current setting.
+Use your browser's print dialog (Cmd/Ctrl+P → Save as PDF). The navigation (sidebar or top bar) is hidden when printing, and the page always prints in light mode regardless of your current setting.
 
 ## Build & deploy
 
