@@ -14,15 +14,15 @@ Senior Full Stack developer with **10+ years** of experience in Web development,
 
 ## Experience
 
-### Senior Full Stack Developer | [Some Company](https://some.company/) | Mar. 2025 - Present
+### Senior Full Stack Developer | [Some Company](https://some.company/) | Montréal | Mar. 2025 - Present
 Full stack development with PHP and JavaScript/TypeScript. React, TypeScript, Tailwind, Vite, HTML, CSS, Playwright.
 
-### Full Stack Developer | Some Other Company | Jan. 2015 - Oct. 2016
+### Full Stack Developer | Some Other Company | Montréal | Jan. 2015 - Oct. 2016
 Full-stack web development with PHP, C#, SQL, HTML/CSS, JavaScript.
 
 ## Education
 
-### Engineer's Diploma in Computer Science | [Some University](https://someuniversity.edu/) | 2009 - 2012
+### Engineer's Diploma in Computer Science | Montréal | [Some University](https://someuniversity.edu/) | 2009 - 2012
 Equivalent to a Master's degree in Computer Science. Major: Software development.
 
 ## Languages

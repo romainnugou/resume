@@ -105,6 +105,7 @@ export function splitSummaryAndBody(body: string): { summaryMd: string; rest: st
 
 export interface TimelineEntry {
   title: string;
+  location?: string;
   org: string;
   orgUrl?: string;
   dates: string;
@@ -170,13 +171,16 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
 
     const entries: TimelineEntry[] = entryBlocks.map(({ title: entryTitle, body: entryBody }) => {
       const parts = entryTitle.split('|').map((part) => part.trim());
+      // `Title | Org | Dates`, or `Title | Org | Location | Dates` when a location is given.
+      const hasLocation = parts.length > 3;
       const orgPart = parts[1] ?? '';
       const orgLink = tryParseLink(orgPart);
       return {
         title: parts[0] ?? '',
         org: orgLink ? orgLink.label : orgPart,
         orgUrl: orgLink?.url,
-        dates: parts[2] ?? '',
+        location: hasLocation ? parts[2] : undefined,
+        dates: (hasLocation ? parts[3] : parts[2]) ?? '',
         html: entryBody ? (marked.parse(entryBody) as string) : '',
       };
     });

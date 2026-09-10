@@ -28,7 +28,7 @@ const { entry, isLast = false } = Astro.props;
       {entry.title}
       {
         entry.org && (
-          <span class="block sm:inline text-gray-600 dark:text-gray-400">
+          <span class="block sm:inline">
             <span class="hidden sm:inline">{' '}-{' '}</span>
             {entry.orgUrl ? (
               <a
@@ -43,6 +43,14 @@ const { entry, isLast = false } = Astro.props;
             ) : (
               entry.org
             )}
+          </span>
+        )
+      }
+      {
+        entry.location && (
+          <span class="block sm:inline">
+            <span class="hidden sm:inline">{' '}-{' '}</span>
+            {entry.location}
           </span>
         )
       }
