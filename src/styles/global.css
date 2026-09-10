@@ -27,7 +27,7 @@
     @apply list-decimal pl-5 space-y-1;
   }
   .markdown-content a {
-    @apply underline hover:no-underline;
+    @apply underline hover:opacity-70;
   }
 
   .nav-tooltip {

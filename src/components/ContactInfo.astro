@@ -26,7 +26,7 @@ function href(field: ContactField): string | undefined {
           <li>
             {field.label}:{" "}
             {url ? (
-              <a href={url} class="underline hover:no-underline">
+              <a href={url} class="underline hover:opacity-70">
                 {field.value}
               </a>
             ) : (
@@ -48,7 +48,7 @@ function href(field: ContactField): string | undefined {
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            class="underline hover:no-underline"
+            class="underline hover:opacity-70"
           >
             {link.url}
             <span class="sr-only"> (opens in new tab)</span>
