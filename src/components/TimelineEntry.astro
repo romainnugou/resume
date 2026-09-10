@@ -16,7 +16,7 @@ const { entry, isLast = false } = Astro.props;
     />
     {
       !isLast && (
-        <span class="absolute left-1/2 top-[26px] bottom-[-30px] w-0.5 -translate-x-1/2 bg-gray-300 dark:bg-gray-700" />
+        <span class="absolute left-1/2 top-[26px] bottom-[-30px] w-0.5 -translate-x-1/2 bg-gray-300 dark:bg-gray-700 print:[print-color-adjust:exact] print:[-webkit-print-color-adjust:exact]" />
       )
     }
   </div>
