@@ -31,8 +31,7 @@ const personJsonLd = {
 const langCss = locales
   .map(
     (l) =>
-      `html[data-active-lang="${l}"] [data-resume-lang="${l}"]{opacity:1;pointer-events:auto}` +
-      `html[data-active-lang="${l}"] [data-lang-switch="${l}"]{font-weight:600;text-decoration:underline}`
+      `html[data-active-lang="${l}"] [data-resume-lang="${l}"]{opacity:1;pointer-events:auto}`
   )
   .join('\n');
 ---

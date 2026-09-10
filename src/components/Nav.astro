@@ -25,7 +25,7 @@ const href = `data:text/markdown;charset=utf-8,${encodeURIComponent(markdown)}`;
       <button
         type="button"
         onclick="window.print()"
-        class="flex h-7 w-7 items-center justify-center hover:opacity-70"
+        class="flex h-7 w-7 items-center rounded-full justify-center hover:opacity-70"
         aria-label="Download resume as PDF"
       >
         <svg
@@ -45,13 +45,13 @@ const href = `data:text/markdown;charset=utf-8,${encodeURIComponent(markdown)}`;
           <path d="m9 15 3 3 3-3" />
         </svg>
       </button>
-      <span class="nav-tooltip" aria-hidden="true">Print / Save as PDF</span>
+      <span class="nav-tooltip" aria-hidden="true">Print / Download as PDF</span>
     </span>
     <span class="group relative flex">
       <a
         href={href}
         download={`resume.${currentLocale}.md`}
-        class="flex h-7 w-7 items-center justify-center hover:opacity-70"
+        class="flex h-7 w-7 items-center rounded-full justify-center hover:opacity-70"
         aria-label="Download resume as Markdown"
       >
         <svg

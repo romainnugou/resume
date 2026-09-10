@@ -17,7 +17,7 @@ const languageName = new Intl.DisplayNames(['en'], { type: 'language' });
         <button
           type="button"
           data-lang-switch={locale}
-          class="lang-switch-btn flex h-7 w-7 items-center justify-center text-sm hover:underline"
+          class="lang-switch-btn flex h-7 w-7 items-center justify-center rounded-full text-sm text-gray-900 hover:opacity-70 aria-[current=true]:bg-gray-100 dark:text-gray-100 dark:aria-[current=true]:bg-gray-800"
           aria-current={locale === currentLocale ? 'true' : 'false'}
         >
           {locale.toUpperCase()}

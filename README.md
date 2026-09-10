@@ -31,7 +31,7 @@ Add `resume.<locale>.md` (e.g. `resume.fr.md`) for each additional language — 
 
 ## Print / PDF
 
-Use your browser's print dialog (Cmd/Ctrl+P → Save as PDF). The top-right bar is hidden when printing, and the page always prints in light mode regardless of your current setting.
+Use your browser's print dialog (Cmd/Ctrl+P → Download as PDF). The top-right bar is hidden when printing, and the page always prints in light mode regardless of your current setting.
 
 ## Build & deploy
 
