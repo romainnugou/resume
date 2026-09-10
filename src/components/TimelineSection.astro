@@ -10,7 +10,7 @@ export interface Props {
 const { section, idPrefix } = Astro.props;
 ---
 
-<section id={idPrefix ? `${idPrefix}-${section.slug}` : section.slug} class="mb-10 scroll-mt-24">
+<section id={idPrefix ? `${idPrefix}-${section.slug}` : section.slug} class="mb-8 scroll-mt-24">
   <h2 class="text-xl font-semibold mb-4 border-b border-gray-200 dark:border-gray-800 pb-1">
     {section.heading}
   </h2>

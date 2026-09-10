@@ -45,8 +45,12 @@ const { entry, isLast = false } = Astro.props;
           )
         }
       </h3>
-      {entry.dates && <span class="text-sm text-gray-500 whitespace-nowrap">{entry.dates}</span>}
+      {entry.dates && (
+        <span class="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
+          {entry.dates}
+        </span>
+      )}
     </div>
-    {entry.html && <div class="markdown-content text-sm mt-1" set:html={entry.html} />}
+    {entry.html && <div class="markdown-content text-sm mt-4" set:html={entry.html} />}
   </div>
 </div>

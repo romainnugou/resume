@@ -10,14 +10,24 @@
 </button>
 
 <script is:inline>
-  if (!window.__themeToggleBound) {
-    window.__themeToggleBound = true;
-    document.addEventListener('click', (e) => {
-      const button = e.target.closest('.theme-toggle');
-      if (!button) return;
-      const root = document.documentElement;
-      const isDark = root.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-  }
+  (function () {
+    function syncPressed() {
+      const isDark = document.documentElement.classList.contains('dark');
+      document.querySelectorAll('.theme-toggle').forEach((btn) => {
+        btn.setAttribute('aria-pressed', String(isDark));
+      });
+    }
+    syncPressed();
+    if (!window.__themeToggleBound) {
+      window.__themeToggleBound = true;
+      document.addEventListener('click', (e) => {
+        const button = e.target.closest('.theme-toggle');
+        if (!button) return;
+        const root = document.documentElement;
+        const isDark = root.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        syncPressed();
+      });
+    }
+  })();
 </script>

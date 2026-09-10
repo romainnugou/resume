@@ -3,6 +3,3 @@
 dist/
 docs/
 node_modules/
-resume.md
-resume.*.md
-!resume.example.md
