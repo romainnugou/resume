@@ -6,10 +6,10 @@ import { parseResumeMarkdown } from '../lib/parseResume';
 
 const files = discoverResumeFiles(process.cwd());
 const defaultFile = files.find((f) => f.isDefault)!;
-const resumes = files.map((f) => ({
-  locale: f.locale,
-  resume: parseResumeMarkdown(fs.readFileSync(f.filePath, 'utf-8')),
-}));
+const resumes = files.map((f) => {
+  const raw = fs.readFileSync(f.filePath, 'utf-8');
+  return { locale: f.locale, resume: parseResumeMarkdown(raw), raw };
+});
 ---
 
 <ResumePage resumes={resumes} defaultLocale={defaultFile.locale} />

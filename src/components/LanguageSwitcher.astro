@@ -10,19 +10,16 @@ const allLocales = [defaultLocale, ...otherLocales];
 ---
 
 {
-  allLocales.length > 1 && (
-    <div class="flex gap-1 text-sm">
-      {allLocales.map((locale) => (
-        <button
-          type="button"
-          data-lang-switch={locale}
-          class="lang-switch-btn px-2 py-1 hover:underline"
-          aria-current={locale === currentLocale ? 'true' : 'false'}
-        >
-          {locale.toUpperCase()}
-        </button>
-      ))}
-    </div>
-  )
+  allLocales.length > 1 &&
+    allLocales.map((locale) => (
+      <button
+        type="button"
+        data-lang-switch={locale}
+        class="lang-switch-btn flex h-7 w-7 items-center justify-center text-sm hover:underline"
+        aria-current={locale === currentLocale ? 'true' : 'false'}
+      >
+        {locale.toUpperCase()}
+      </button>
+    ))
 }
 

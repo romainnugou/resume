@@ -8,7 +8,7 @@ import TimelineSection from './TimelineSection.astro';
 import type { ParsedResume } from '../lib/parseResume';
 
 export interface Props {
-  resumes: { locale: string; resume: ParsedResume }[];
+  resumes: { locale: string; resume: ParsedResume; raw: string }[];
   defaultLocale: string;
 }
 
@@ -25,9 +25,14 @@ const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
 >
   <div class="grid">
     {
-      resumes.map(({ locale, resume }) => (
+      resumes.map(({ locale, resume, raw }) => (
         <div data-resume-lang={locale} class="[&>*:last-child]:mb-0">
-          <Nav defaultLocale={defaultLocale} otherLocales={otherLocales} currentLocale={locale} />
+          <Nav
+            defaultLocale={defaultLocale}
+            otherLocales={otherLocales}
+            currentLocale={locale}
+            markdown={raw}
+          />
           <Header name={resume.name} title={resume.title} photo={resume.photo} />
           <ContactInfo
             email={resume.email}
