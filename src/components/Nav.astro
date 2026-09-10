@@ -52,8 +52,8 @@ const { sections, defaultLocale, otherLocales, currentLocale } = Astro.props;
   }
 </nav>
 
-<!-- Desktop: fixed sidebar, always expanded. Hidden below md. -->
-<nav class="print:hidden hidden md:fixed md:inset-y-0 md:left-0 md:z-10 md:flex md:w-56 md:flex-col md:justify-between md:border-r md:border-gray-200 md:bg-white md:p-4 md:dark:border-gray-800 md:dark:bg-gray-900">
+<!-- Desktop: sticky column beside the content (not pinned to the viewport edge). -->
+<nav class="print:hidden hidden md:sticky md:top-8 md:z-10 md:flex md:flex-col md:self-start">
   <div class="flex flex-col gap-3 text-sm">
     {sections.map((section) => (
       <a href={`#${section.slug}`} class="hover:underline">
@@ -61,7 +61,7 @@ const { sections, defaultLocale, otherLocales, currentLocale } = Astro.props;
       </a>
     ))}
   </div>
-  <div class="flex items-center gap-3">
+  <div class="mt-4 flex items-center gap-3 border-t border-gray-200 pt-4 dark:border-gray-800">
     <LanguageSwitcher
       defaultLocale={defaultLocale}
       otherLocales={otherLocales}

@@ -1,0 +1,50 @@
+---
+import type { Link } from '../lib/parseResume';
+
+export interface Props {
+  email?: string;
+  phone?: string;
+  address?: string;
+  links: Link[];
+}
+
+const { email, phone, address, links } = Astro.props;
+const hasContactInfo = email || phone || address || links.length > 0;
+---
+
+{
+  hasContactInfo && (
+    <ul class="space-y-1 text-sm">
+      {email && (
+        <li>
+          Email:{' '}
+          <a href={`mailto:${email}`} class="underline hover:no-underline">
+            {email}
+          </a>
+        </li>
+      )}
+      {phone && (
+        <li>
+          Phone:{' '}
+          <a href={`tel:${phone}`} class="underline hover:no-underline">
+            {phone}
+          </a>
+        </li>
+      )}
+      {address && <li>Address: {address}</li>}
+      {links.map((link) => (
+        <li>
+          {link.label}:{' '}
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="underline hover:no-underline"
+          >
+            {link.url}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

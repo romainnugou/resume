@@ -1,6 +1,7 @@
 ---
 import ResumeLayout from '../layouts/ResumeLayout.astro';
 import Header from './Header.astro';
+import ContactInfo from './ContactInfo.astro';
 import Nav from './Nav.astro';
 import Section from './Section.astro';
 import TimelineSection from './TimelineSection.astro';
@@ -17,30 +18,31 @@ const { resume, lang, defaultLocale, otherLocales } = Astro.props;
 ---
 
 <ResumeLayout name={resume.name} title={resume.title} lang={lang}>
-  <Nav
-    slot="nav"
-    sections={resume.sections}
-    defaultLocale={defaultLocale}
-    otherLocales={otherLocales}
-    currentLocale={lang}
-  />
-  <Header
-    name={resume.name}
-    title={resume.title}
-    photo={resume.photo}
-    email={resume.email}
-    phone={resume.phone}
-    address={resume.address}
-    links={resume.links}
-    summaryHtml={resume.summaryHtml}
-  />
-  {
-    resume.sections.map((section) =>
-      section.type === 'timeline' ? (
-        <TimelineSection section={section} />
-      ) : (
-        <Section section={section} />
-      )
-    )
-  }
+  <Header name={resume.name} title={resume.title} photo={resume.photo} />
+  <div class="md:grid md:grid-cols-[14rem_1fr] md:gap-10">
+    <Nav
+      sections={resume.sections}
+      defaultLocale={defaultLocale}
+      otherLocales={otherLocales}
+      currentLocale={lang}
+    />
+    <div>
+      <ContactInfo
+        email={resume.email}
+        phone={resume.phone}
+        address={resume.address}
+        links={resume.links}
+      />
+      {resume.summaryHtml && <div class="markdown-content mt-6" set:html={resume.summaryHtml} />}
+      {
+        resume.sections.map((section) =>
+          section.type === 'timeline' ? (
+            <TimelineSection section={section} />
+          ) : (
+            <Section section={section} />
+          )
+        )
+      }
+    </div>
+  </div>
 </ResumeLayout>
