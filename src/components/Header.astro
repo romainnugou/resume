@@ -11,7 +11,7 @@ export interface Props {
 const { name, title, photo, class: className } = Astro.props;
 ---
 
-<header class:list={['mb-8 flex flex-col sm:flex-row gap-6 sm:items-center', className]}>
+<header class:list={['mb-10 md:mb-0 flex flex-col sm:flex-row gap-6 sm:items-center', className]}>
   {
     photo && (
       <img

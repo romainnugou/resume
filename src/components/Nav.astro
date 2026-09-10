@@ -15,8 +15,14 @@ const { sections, defaultLocale, otherLocales, currentLocale, class: className }
 ---
 
 <!-- Mobile: top bar with a collapsible section-links menu. Hidden entirely at md+. -->
-<nav class="print:hidden md:hidden sticky top-0 z-10 mb-8 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
-  <div class="flex items-center justify-between gap-4 px-4 py-3">
+<nav class="print:hidden md:hidden sticky top-0 z-10 mb-10 border-b border-gray-200 bg-white/95 backdrop-blur dark:border-gray-800 dark:bg-gray-900/95">
+  <div class="flex items-center justify-end gap-4 px-4 py-3">
+    <LanguageSwitcher
+      defaultLocale={defaultLocale}
+      otherLocales={otherLocales}
+      currentLocale={currentLocale}
+    />
+    <ThemeToggle />
     {
       sections.length > 0 && (
         <button
@@ -31,14 +37,6 @@ const { sections, defaultLocale, otherLocales, currentLocale, class: className }
         </button>
       )
     }
-    <div class="ml-auto flex items-center gap-3">
-      <LanguageSwitcher
-        defaultLocale={defaultLocale}
-        otherLocales={otherLocales}
-        currentLocale={currentLocale}
-      />
-      <ThemeToggle />
-    </div>
   </div>
   {
     sections.length > 0 && (

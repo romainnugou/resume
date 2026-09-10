@@ -9,7 +9,7 @@ const { section } = Astro.props;
 ---
 
 <section id={section.slug} class="mb-10 scroll-mt-24">
-  <h2 class="text-xl font-semibold mb-3 border-b border-gray-200 dark:border-gray-800 pb-1">
+  <h2 class="text-xl font-semibold mb-4 border-b border-gray-200 dark:border-gray-800 pb-1">
     {section.heading}
   </h2>
   <div class="markdown-content" set:html={section.html} />
