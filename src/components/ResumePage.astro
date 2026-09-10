@@ -22,6 +22,10 @@ const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
   title={defaultResume.title}
   lang={defaultLocale}
   locales={resumes.map((r) => r.locale)}
+  photo={defaultResume.photo?.url}
+  email={defaultResume.email}
+  phone={defaultResume.phone}
+  sameAs={defaultResume.links.map((l) => l.url)}
 >
   <div class="grid">
     {
