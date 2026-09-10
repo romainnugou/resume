@@ -15,6 +15,8 @@ export interface Props {
 const { resumes, defaultLocale } = Astro.props;
 const otherLocales = resumes.map((r) => r.locale).filter((l) => l !== defaultLocale);
 const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
+const defaultEmail = defaultResume.contact.find((f) => f.type === 'email')?.value;
+const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.value;
 ---
 
 <ResumeLayout
@@ -23,8 +25,8 @@ const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
   lang={defaultLocale}
   locales={resumes.map((r) => r.locale)}
   photo={defaultResume.photo?.url}
-  email={defaultResume.email}
-  phone={defaultResume.phone}
+  email={defaultEmail}
+  phone={defaultPhone}
   sameAs={defaultResume.links.map((l) => l.url)}
 >
   <div class="grid">
@@ -38,12 +40,7 @@ const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
             markdown={raw}
           />
           <Header name={resume.name} title={resume.title} photo={resume.photo} />
-          <ContactInfo
-            email={resume.email}
-            phone={resume.phone}
-            address={resume.address}
-            links={resume.links}
-          />
+          <ContactInfo contact={resume.contact} links={resume.links} />
           {resume.summaryHtml && (
             <div class="markdown-content mb-8" set:html={resume.summaryHtml} />
           )}

@@ -28,7 +28,8 @@ Full design rationale: `docs/superpowers/specs/2026-09-09-resume-app-design.md`.
 - The timeline dot's fill uses `bg-*` (background-color), which browsers suppress by default when printing — it carries `print:[print-color-adjust:exact]` (plus the `-webkit-` variant) to force it to print. Don't remove that when touching the dot's styling, or it disappears in print/PDF output again.
 - The theme toggle is a static SVG icon (a circle, left half filled, right half outlined only) — it does not swap between two icons/labels based on the current theme like the earlier text version did. `aria-label` carries the accessible name instead.
 - The theme toggle has no border/background/padding — it's styled bare, like the plain `LanguageSwitcher` links next to it (`hover:opacity-70` for feedback instead of a button-like box). Don't add a border "for visibility"; it was deliberately removed to match the surrounding nav links.
-- `ContactInfo.astro` renders two separate `<ul>`s — one for contact fields (email/phone/address), one for links — instead of a single merged list. This is deliberate (they're conceptually different groups), not an oversight to "fix" into one list.
+- `ContactInfo.astro` renders two separate `<ul>`s — one for `contact` fields, one for `links` — instead of a single merged list. This is deliberate (they're conceptually different groups), not an oversight to "fix" into one list.
+- `contact` in frontmatter is a list of `{label, value, type}` objects (`type` is `email`, `phone`, or `text`), not fixed `email`/`phone`/`address` keys — this is deliberate so a resume can have any number of contact fields (e.g. two phone numbers) and translate labels per-locale. Unlike `links`/`photo`, it's a plain object shape, not markdown syntax — don't convert it to a `"[Label](value)"` string form.
 
 ## Spacing rhythm
 

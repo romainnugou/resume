@@ -2,9 +2,16 @@
 name: Jane Doe
 title: Senior Full Stack Developer
 lang: en
-email: jane.doe@example.com
-phone: "+1 (555) 123-4567"
-address: Some place, Canada
+contact:
+  - label: Email
+    value: jane.doe@example.com
+    type: email
+  - label: Phone
+    value: "+1 (555) 123-4567"
+    type: phone
+  - label: Address
+    value: Some place, Canada
+    type: text
 links:
   - "[LinkedIn](https://linkedin.com/in/janedoe)"
   - "[Github](https://github.com/janedoe)"

@@ -1,38 +1,40 @@
 ---
-import type { Link } from "../lib/parseResume";
+import type { ContactField, Link } from "../lib/parseResume";
 
 export interface Props {
-  email?: string;
-  phone?: string;
-  address?: string;
+  contact: ContactField[];
   links: Link[];
 }
 
-const { email, phone, address, links } = Astro.props;
-const hasContactInfo = email || phone || address;
+const { contact, links } = Astro.props;
+const hasContactInfo = contact.length > 0;
 const hasLinks = links.length > 0;
+
+function href(field: ContactField): string | undefined {
+  if (field.type === "email") return `mailto:${field.value}`;
+  if (field.type === "phone") return `tel:${field.value}`;
+  return undefined;
+}
 ---
 
 {
   hasContactInfo && (
     <ul class="space-y-1 text-sm mb-8">
-      {email && (
-        <li>
-          Email:{" "}
-          <a href={`mailto:${email}`} class="underline hover:no-underline">
-            {email}
-          </a>
-        </li>
-      )}
-      {phone && (
-        <li>
-          Phone:{" "}
-          <a href={`tel:${phone}`} class="underline hover:no-underline">
-            {phone}
-          </a>
-        </li>
-      )}
-      {address && <li>Address: {address}</li>}
+      {contact.map((field) => {
+        const url = href(field);
+        return (
+          <li>
+            {field.label}:{" "}
+            {url ? (
+              <a href={url} class="underline hover:no-underline">
+                {field.value}
+              </a>
+            ) : (
+              field.value
+            )}
+          </li>
+        );
+      })}
     </ul>
   )
 }
