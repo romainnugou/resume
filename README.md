@@ -29,9 +29,9 @@ A small bar floats in the top-right corner of the page holding the language swit
 
 Add `resume.<locale>.md` (e.g. `resume.fr.md`) for each additional language — same format as `resume.md`, fully independent content. Once you add one, `resume.md` must declare its own `lang` in frontmatter (e.g. `lang: en`), since it's no longer the only language. Don't want multiple languages? Just delete the extra file(s) — `lang` becomes optional again automatically.
 
-## Print / PDF
+## Print / PDF / Markdown export
 
-Use your browser's print dialog (Cmd/Ctrl+P → Download as PDF). The top-right bar is hidden when printing, and the page always prints in light mode regardless of your current setting.
+Use your browser's print dialog (Cmd/Ctrl+P → Download as PDF), or the print icon in the top-right bar, which does the same thing. The bar also has a download icon that saves the current locale's raw `resume.<lang>.md` file as-is. The top-right bar is hidden when printing, and the page always prints in light mode regardless of your current setting.
 
 ## Build & deploy
 
@@ -49,4 +49,4 @@ pnpm test      # runs the parser/discovery unit tests
 
 ## About
 
-Made by [Romain Nugou](https://romain.ng/).
+Made by [Romain Nugou](https://romain.ng/). The page itself credits this repo and its author in a small footer.

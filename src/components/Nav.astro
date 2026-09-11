@@ -26,7 +26,7 @@ const href = `data:text/markdown;charset=utf-8,${encodeURIComponent(markdown)}`;
         type="button"
         onclick="window.print()"
         class="flex h-7 w-7 items-center rounded-full justify-center hover:opacity-70"
-        aria-label="Download resume as PDF"
+        aria-label="Print / Download as PDF"
       >
         <svg
           viewBox="0 0 24 24"
@@ -52,7 +52,7 @@ const href = `data:text/markdown;charset=utf-8,${encodeURIComponent(markdown)}`;
         href={href}
         download={`resume.${currentLocale}.md`}
         class="flex h-7 w-7 items-center rounded-full justify-center hover:opacity-70"
-        aria-label="Download resume as Markdown"
+        aria-label="Download as Markdown"
       >
         <svg
           viewBox="0 0 24 24"

@@ -83,6 +83,7 @@ const langCss = locales
             function setActive(locale) {
               document.documentElement.setAttribute('data-active-lang', locale);
               document.documentElement.lang = locale;
+              document.getElementById('skip-link')?.setAttribute('href', `#${locale}-main-content`);
               document.querySelectorAll('[data-lang-switch]').forEach((btn) => {
                 btn.setAttribute('aria-current', btn.dataset.langSwitch === locale ? 'true' : 'false');
               });
@@ -113,6 +114,7 @@ const langCss = locales
   <body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 print:bg-white print:text-black">
     <a
       href="#main-content"
+      id="skip-link"
       class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-2 focus:py-1 focus:rounded"
     >
       Skip to content

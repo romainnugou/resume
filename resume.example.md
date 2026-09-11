@@ -29,7 +29,7 @@ Full-stack web development with PHP, C#, SQL, HTML/CSS, JavaScript.
 
 ## Education
 
-### Engineer's Diploma in Computer Science | Montréal | [Some University](https://someuniversity.edu/) | 2009 - 2012
+### Engineer's Diploma in Computer Science | [Some University](https://someuniversity.edu/) | Montréal | 2009 - 2012
 Equivalent to a Master's degree in Computer Science. Major: Software development.
 
 ## Languages

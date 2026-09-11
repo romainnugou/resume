@@ -14,6 +14,7 @@ export interface Props {
 
 const { resumes, defaultLocale } = Astro.props;
 const otherLocales = resumes.map((r) => r.locale).filter((l) => l !== defaultLocale);
+const isMultiLocale = resumes.length > 1;
 const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
 const defaultEmail = defaultResume.contact.find((f) => f.type === 'email')?.value;
 const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.value;
@@ -43,7 +44,9 @@ const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.valu
             name={resume.name}
             title={resume.title}
             photo={resume.photo}
-            skipTargetId={locale === defaultLocale ? 'main-content' : undefined}
+            skipTargetId={
+              isMultiLocale ? `${locale}-main-content` : locale === defaultLocale ? 'main-content' : undefined
+            }
           />
           <ContactInfo contact={resume.contact} links={resume.links} />
           {resume.summaryHtml && (
