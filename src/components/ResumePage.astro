@@ -39,7 +39,12 @@ const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.valu
             currentLocale={locale}
             markdown={raw}
           />
-          <Header name={resume.name} title={resume.title} photo={resume.photo} />
+          <Header
+            name={resume.name}
+            title={resume.title}
+            photo={resume.photo}
+            skipTargetId={locale === defaultLocale ? 'main-content' : undefined}
+          />
           <ContactInfo contact={resume.contact} links={resume.links} />
           {resume.summaryHtml && (
             <div class="markdown-content mb-8" set:html={resume.summaryHtml} />
