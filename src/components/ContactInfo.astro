@@ -17,44 +17,46 @@ function href(field: ContactField): string | undefined {
 }
 ---
 
-{
-  hasContactInfo && (
-    <ul class="space-y-1 text-sm mb-8">
-      {contact.map((field) => {
-        const url = href(field);
-        return (
+<div class="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-4 mb-8">
+  {
+    hasContactInfo && (
+      <ul class="space-y-1 text-sm">
+        {contact.map((field) => {
+          const url = href(field);
+          return (
+            <li>
+              {field.label}:{" "}
+              {url ? (
+                <a href={url} class="underline hover:opacity-70">
+                  {field.value}
+                </a>
+              ) : (
+                field.value
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    )
+  }
+  {
+    hasLinks && (
+      <ul class="space-y-1 text-sm">
+        {links.map((link) => (
           <li>
-            {field.label}:{" "}
-            {url ? (
-              <a href={url} class="underline hover:opacity-70">
-                {field.value}
-              </a>
-            ) : (
-              field.value
-            )}
+            {link.label}:{" "}
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline hover:opacity-70"
+            >
+              {link.url}
+              <span class="sr-only"> (opens in new tab)</span>
+            </a>
           </li>
-        );
-      })}
-    </ul>
-  )
-}
-{
-  hasLinks && (
-    <ul class="space-y-1 text-sm mb-8">
-      {links.map((link) => (
-        <li>
-          {link.label}:{" "}
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="underline hover:opacity-70"
-          >
-            {link.url}
-            <span class="sr-only"> (opens in new tab)</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  )
-}
+        ))}
+      </ul>
+    )
+  }
+</div>
