@@ -8,13 +8,16 @@ import TimelineSection from './TimelineSection.astro';
 import type { ParsedResume } from '../lib/parseResume';
 
 export interface Props {
-  resumes: { locale: string; resume: ParsedResume }[];
+  resumes: { locale: string; resume: ParsedResume; raw: string }[];
   defaultLocale: string;
 }
 
 const { resumes, defaultLocale } = Astro.props;
 const otherLocales = resumes.map((r) => r.locale).filter((l) => l !== defaultLocale);
+const isMultiLocale = resumes.length > 1;
 const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
+const defaultEmail = defaultResume.contact.find((f) => f.type === 'email')?.value;
+const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.value;
 ---
 
 <ResumeLayout
@@ -22,21 +25,32 @@ const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
   title={defaultResume.title}
   lang={defaultLocale}
   locales={resumes.map((r) => r.locale)}
+  photo={defaultResume.photo?.url}
+  email={defaultEmail}
+  phone={defaultPhone}
+  sameAs={defaultResume.links.map((l) => l.url)}
 >
   <div class="grid">
     {
-      resumes.map(({ locale, resume }) => (
-        <div data-resume-lang={locale}>
-          <Nav defaultLocale={defaultLocale} otherLocales={otherLocales} currentLocale={locale} />
-          <Header name={resume.name} title={resume.title} photo={resume.photo} />
-          <ContactInfo
-            email={resume.email}
-            phone={resume.phone}
-            address={resume.address}
-            links={resume.links}
+      resumes.map(({ locale, resume, raw }) => (
+        <div data-resume-lang={locale} class="[&>*:last-child]:mb-0">
+          <Nav
+            defaultLocale={defaultLocale}
+            otherLocales={otherLocales}
+            currentLocale={locale}
+            markdown={raw}
           />
+          <Header
+            name={resume.name}
+            title={resume.title}
+            photo={resume.photo}
+            skipTargetId={
+              isMultiLocale ? `${locale}-main-content` : locale === defaultLocale ? 'main-content' : undefined
+            }
+          />
+          <ContactInfo contact={resume.contact} links={resume.links} />
           {resume.summaryHtml && (
-            <div class="markdown-content mt-6 mb-10" set:html={resume.summaryHtml} />
+            <div class="markdown-content mb-8" set:html={resume.summaryHtml} />
           )}
           {resume.sections.map((section) =>
             section.type === 'timeline' ? (
@@ -49,4 +63,7 @@ const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
       ))
     }
   </div>
+  <footer class="mt-16 text-left text-sm text-gray-600 dark:text-gray-400 print:hidden">
+    Built with <a href="https://github.com/romainnugou/resume" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">Resume<span class="sr-only"> (opens in new tab)</span></a> by <a href="https://romain.ng/" target="_blank" rel="noopener noreferrer" class="underline hover:opacity-70">Romain Nugou<span class="sr-only"> (opens in new tab)</span></a>
+  </footer>
 </ResumeLayout>

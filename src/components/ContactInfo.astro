@@ -1,50 +1,62 @@
 ---
-import type { Link } from '../lib/parseResume';
+import type { ContactField, Link } from "../lib/parseResume";
 
 export interface Props {
-  email?: string;
-  phone?: string;
-  address?: string;
+  contact: ContactField[];
   links: Link[];
 }
 
-const { email, phone, address, links } = Astro.props;
-const hasContactInfo = email || phone || address || links.length > 0;
+const { contact, links } = Astro.props;
+const hasContactInfo = contact.length > 0;
+const hasLinks = links.length > 0;
+
+function href(field: ContactField): string | undefined {
+  if (field.type === "email") return `mailto:${field.value}`;
+  if (field.type === "phone") return `tel:${field.value}`;
+  return undefined;
+}
 ---
 
-{
-  hasContactInfo && (
-    <ul class="space-y-1 text-sm">
-      {email && (
-        <li>
-          Email:{' '}
-          <a href={`mailto:${email}`} class="underline hover:no-underline">
-            {email}
-          </a>
-        </li>
-      )}
-      {phone && (
-        <li>
-          Phone:{' '}
-          <a href={`tel:${phone}`} class="underline hover:no-underline">
-            {phone}
-          </a>
-        </li>
-      )}
-      {address && <li>Address: {address}</li>}
-      {links.map((link) => (
-        <li>
-          {link.label}:{' '}
-          <a
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="underline hover:no-underline"
-          >
-            {link.url}
-          </a>
-        </li>
-      ))}
-    </ul>
-  )
-}
+<div class="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-4 mb-8">
+  {
+    hasContactInfo && (
+      <ul class="space-y-1 text-sm">
+        {contact.map((field) => {
+          const url = href(field);
+          return (
+            <li>
+              {field.label}:{" "}
+              {url ? (
+                <a href={url} class="underline hover:opacity-70">
+                  {field.value}
+                </a>
+              ) : (
+                field.value
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    )
+  }
+  {
+    hasLinks && (
+      <ul class="space-y-1 text-sm">
+        {links.map((link) => (
+          <li>
+            {link.label}:{" "}
+            <a
+              href={link.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline hover:opacity-70"
+            >
+              {link.url}
+              <span class="sr-only"> (opens in new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</div>

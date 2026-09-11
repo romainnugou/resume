@@ -5,18 +5,19 @@ export interface Props {
   name: string;
   title: string;
   photo: Photo | null;
+  skipTargetId?: string;
 }
 
-const { name, title, photo } = Astro.props;
+const { name, title, photo, skipTargetId } = Astro.props;
 ---
 
-<header class="mb-10 flex flex-col sm:flex-row gap-6 sm:items-center">
+<header id={skipTargetId} tabindex={skipTargetId ? -1 : undefined} class="mb-8 flex flex-col sm:flex-row gap-6 sm:items-center focus:outline-none">
   {
     photo && (
       <img
         src={photo.url}
         alt={photo.alt}
-        class="w-24 h-24 rounded-full object-cover shrink-0"
+        class="w-20 h-20 rounded-full object-cover shrink-0"
       />
     )
   }

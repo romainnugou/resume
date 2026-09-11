@@ -22,6 +22,12 @@ export interface Photo {
   url: string;
 }
 
+export interface ContactField {
+  label: string;
+  value: string;
+  type: 'email' | 'phone' | 'text';
+}
+
 const LINK_PATTERN = /^\[(.+)\]\((.+)\)$/;
 const PHOTO_PATTERN = /^!\[(.*)\]\((.+)\)$/;
 
@@ -105,6 +111,7 @@ export function splitSummaryAndBody(body: string): { summaryMd: string; rest: st
 
 export interface TimelineEntry {
   title: string;
+  location?: string;
   org: string;
   orgUrl?: string;
   dates: string;
@@ -133,9 +140,7 @@ export interface ParsedResume {
   title: string;
   lang?: string;
   photo: Photo | null;
-  email?: string;
-  phone?: string;
-  address?: string;
+  contact: ContactField[];
   links: Link[];
   summaryHtml: string;
   sections: Section[];
@@ -148,9 +153,12 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
   const title = String(data.title ?? '');
   const lang = data.lang ? String(data.lang) : undefined;
   const photo = data.photo ? parsePhotoString(String(data.photo)) : null;
-  const email = data.email ? String(data.email) : undefined;
-  const phone = data.phone ? String(data.phone) : undefined;
-  const address = data.address ? String(data.address) : undefined;
+  const rawContact: ContactField[] = Array.isArray(data.contact) ? data.contact : [];
+  const contact = rawContact.map((field) => ({
+    label: String(field.label),
+    value: String(field.value),
+    type: field.type,
+  }));
   const rawLinks: string[] = Array.isArray(data.links) ? data.links : [];
   const links = rawLinks.map((link) => parseLinkString(link));
 
@@ -170,13 +178,16 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
 
     const entries: TimelineEntry[] = entryBlocks.map(({ title: entryTitle, body: entryBody }) => {
       const parts = entryTitle.split('|').map((part) => part.trim());
+      // `Title | Org | Dates`, or `Title | Org | Location | Dates` when a location is given.
+      const hasLocation = parts.length > 3;
       const orgPart = parts[1] ?? '';
       const orgLink = tryParseLink(orgPart);
       return {
         title: parts[0] ?? '',
         org: orgLink ? orgLink.label : orgPart,
         orgUrl: orgLink?.url,
-        dates: parts[2] ?? '',
+        location: hasLocation ? parts[2] : undefined,
+        dates: (hasLocation ? parts[3] : parts[2]) ?? '',
         html: entryBody ? (marked.parse(entryBody) as string) : '',
       };
     });
@@ -184,5 +195,5 @@ export function parseResumeMarkdown(raw: string): ParsedResume {
     return { type: 'timeline', heading, slug, introHtml, entries };
   });
 
-  return { name, title, lang, photo, email, phone, address, links, summaryHtml, sections };
+  return { name, title, lang, photo, contact, links, summaryHtml, sections };
 }

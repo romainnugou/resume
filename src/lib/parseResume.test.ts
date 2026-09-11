@@ -223,13 +223,20 @@ Did things.
     expect(experience?.slug).toBe('experience');
   });
 
-  it('parses optional email, phone, and address frontmatter fields', () => {
+  it('parses the contact frontmatter field as an array of fields', () => {
     const withContact = `---
 name: Jane Doe
 title: Software Engineer
-email: jane@example.com
-phone: "+1 555-555-5555"
-address: Montreal, QC
+contact:
+  - label: Email
+    value: jane@example.com
+    type: email
+  - label: Phone
+    value: "+1 555-555-5555"
+    type: phone
+  - label: Address
+    value: Montreal, QC
+    type: text
 ---
 
 ## Experience
@@ -237,16 +244,16 @@ address: Montreal, QC
 ### Eng | Acme | 2020
 `;
     const resume = parseResumeMarkdown(withContact);
-    expect(resume.email).toBe('jane@example.com');
-    expect(resume.phone).toBe('+1 555-555-5555');
-    expect(resume.address).toBe('Montreal, QC');
+    expect(resume.contact).toEqual([
+      { label: 'Email', value: 'jane@example.com', type: 'email' },
+      { label: 'Phone', value: '+1 555-555-5555', type: 'phone' },
+      { label: 'Address', value: 'Montreal, QC', type: 'text' },
+    ]);
   });
 
-  it('leaves email, phone, and address undefined when absent', () => {
+  it('leaves contact as an empty array when absent', () => {
     const resume = parseResumeMarkdown(sample);
-    expect(resume.email).toBeUndefined();
-    expect(resume.phone).toBeUndefined();
-    expect(resume.address).toBeUndefined();
+    expect(resume.contact).toEqual([]);
   });
 
   it('parses an optional link on the org piece of a timeline entry', () => {
