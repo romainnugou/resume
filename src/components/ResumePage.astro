@@ -16,6 +16,9 @@ const { resumes, defaultLocale } = Astro.props;
 const otherLocales = resumes.map((r) => r.locale).filter((l) => l !== defaultLocale);
 const isMultiLocale = resumes.length > 1;
 const defaultResume = resumes.find((r) => r.locale === defaultLocale)!.resume;
+const titles = Object.fromEntries(
+  resumes.map(({ locale, resume }) => [locale, `${resume.name} - ${resume.title}`])
+);
 const defaultEmail = defaultResume.contact.find((f) => f.type === 'email')?.value;
 const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.value;
 ---
@@ -25,6 +28,7 @@ const defaultPhone = defaultResume.contact.find((f) => f.type === 'phone')?.valu
   title={defaultResume.title}
   lang={defaultLocale}
   locales={resumes.map((r) => r.locale)}
+  titles={titles}
   photo={defaultResume.photo?.url}
   email={defaultEmail}
   phone={defaultPhone}

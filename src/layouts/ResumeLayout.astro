@@ -6,6 +6,7 @@ export interface Props {
   title: string;
   lang: string;
   locales: string[];
+  titles: Record<string, string>;
   photo?: string | null;
   email?: string;
   phone?: string;
@@ -13,8 +14,8 @@ export interface Props {
   sameAs?: string[];
 }
 
-const { name, title, lang, locales, photo, email, phone, url, sameAs } = Astro.props;
-const pageTitle = `${name} - ${title}`;
+const { name, title, lang, locales, titles, photo, email, phone, url, sameAs } = Astro.props;
+const pageTitle = titles[lang] ?? `${name} - ${title}`;
 
 const personJsonLd = {
   '@context': 'https://schema.org',
@@ -65,7 +66,7 @@ const langCss = locales
     {locales.length > 1 && (
       <>
         <style set:html={`[data-resume-lang]{grid-row:1;grid-column:1;opacity:0;pointer-events:none;transition:opacity .2s ease}\n${langCss}`} />
-        <script is:inline define:vars={{ locales }}>
+        <script is:inline define:vars={{ locales, titles }}>
           (function () {
             function resolveLocale() {
               try {
@@ -83,6 +84,7 @@ const langCss = locales
             function setActive(locale) {
               document.documentElement.setAttribute('data-active-lang', locale);
               document.documentElement.lang = locale;
+              if (titles[locale]) document.title = titles[locale];
               document.getElementById('skip-link')?.setAttribute('href', `#${locale}-main-content`);
               document.querySelectorAll('[data-lang-switch]').forEach((btn) => {
                 btn.setAttribute('aria-current', btn.dataset.langSwitch === locale ? 'true' : 'false');
